@@ -48,7 +48,7 @@ jobs:
 
       - run:
           name: Deploy to Google Cloud Storage
-          command: gsutil rsync -d dist gs://${GOOGLE_STORAGE_BUCKET}
+          command: gsutil -m rsync -d dist gs://${GOOGLE_STORAGE_BUCKET}
 
       - run:
           name: Set read access to files
