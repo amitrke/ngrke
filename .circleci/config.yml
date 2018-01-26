@@ -33,3 +33,23 @@ jobs:
           key: ngrke-{{ checksum "package.json" }}
       
       - run: yarn build
+
+      - run:
+          name: Dump Google Cloud Credentials to file
+          command: echo ${GCLOUD_SERVICEACC_STORAGE} > ${HOME}/gcp-key.json
+
+      - run:
+          name: Active service account
+          command: gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+
+      - run:
+          name: Set Google cloud project id
+          command: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+
+      - run:
+          name: Deploy to Google Cloud Storage
+          command: gsutil rsync -d dist gs://${GOOGLE_STORAGE_BUCKET}
+
+      - run:
+          name: Set read access to files
+          command: gsutil -m acl ch -u AllUsers:R gs://${GOOGLE_STORAGE_BUCKET}/*
