@@ -7,7 +7,9 @@ import {MatButtonModule,
   MatCheckboxModule,
   MatToolbarModule,
   MatIconModule,
-  MatGridListModule
+  MatGridListModule,
+  MatSidenavModule,
+  MatCardModule
 } from '@angular/material';
 
 @NgModule({
@@ -19,7 +21,9 @@ import {MatButtonModule,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatIconModule,
-    MatGridListModule
+    MatGridListModule,
+    MatSidenavModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

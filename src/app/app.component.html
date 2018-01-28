@@ -1,5 +1,4 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<mat-toolbar>
+<mat-toolbar color="primary">
     <mat-icon>home</mat-icon>
     <span>Roorkee.org</span>
     <span class="toolbar-fill-remaining-space"></span>
@@ -7,17 +6,30 @@
     <span>IITR</span>
     <span style="width:15px"></span>
     <mat-icon>photo_library</mat-icon>
-    <span>Photo Library</span>
+    <span>Photos</span>
     <span style="width:15px"></span>
     <mat-icon>account_circle</mat-icon>
     <span>Login</span>
 </mat-toolbar>
-<h1> Welcome to {{ title }}!</h1>
-<mat-grid-list cols="2" rowHeight="2:1">
-    <mat-grid-tile>
-        Roorkee is respected world over for being the proud owner of world class IIT (Indian Institute of Technology). Institution with a golden past, Situated on the bank of river Solani, it has one of the oldest cantonments in India.
-    </mat-grid-tile>
-    <mat-grid-tile>2</mat-grid-tile>
-    <mat-grid-tile>3</mat-grid-tile>
-    <mat-grid-tile>4</mat-grid-tile>
-</mat-grid-list>
+
+<mat-card class="home-card">
+        <mat-card-title>The Town</mat-card-title>
+        <img mat-card-image src="assets/img/home/roorkee.jpg" alt="Roorkee">
+        <mat-card-content>
+            Roorkee is respected world over for being the proud owner of world class IIT (Indian Institute of Technology). Institution with a golden past, Situated on the bank of river Solani, it has one of the oldest cantonments in India.
+        </mat-card-content>
+</mat-card>
+<mat-card class="home-card">
+        <mat-card-title>Indian Institute of Technology</mat-card-title>
+        <img mat-card-image src="assets/img/home/roorkee.jpg" alt="IITR">
+        <mat-card-content>
+                The famed IIT (Indian Institute of Technology) has its genesis in Roorkee College. Constituted in 1847, its purpose was to train the manpower for the construction of Ganga Canal. Today it educates hundreds of students and prepares them for global challenges.
+        </mat-card-content>
+</mat-card>
+<mat-card class="home-card">
+        <mat-card-title>Indian Institute of Technology</mat-card-title>
+        <img mat-card-image src="assets/img/home/roorkee.jpg" alt="IITR">
+        <mat-card-content>
+                The famed IIT (Indian Institute of Technology) has its genesis in Roorkee College. Constituted in 1847, its purpose was to train the manpower for the construction of Ganga Canal. Today it educates hundreds of students and prepares them for global challenges.
+        </mat-card-content>
+</mat-card>
