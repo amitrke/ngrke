@@ -11,10 +11,15 @@ import {MatButtonModule,
   MatSidenavModule,
   MatCardModule
 } from '@angular/material';
+import { AppRoutingModule } from './/app-routing.module';
+import { CmsPageComponent } from './cms-page/cms-page.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CmsPageComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +28,8 @@ import {MatButtonModule,
     MatIconModule,
     MatGridListModule,
     MatSidenavModule,
-    MatCardModule
+    MatCardModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
