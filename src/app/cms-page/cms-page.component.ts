@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ContentService } from '../services/content.service';
+import { ContentEntity } from '../entity/content.entity';
 
 @Component({
   selector: 'app-cms-page',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CmsPageComponent implements OnInit {
 
-  constructor() { }
+  public content: ContentEntity;
 
-  ngOnInit() {
+  constructor(
+    private contentService: ContentService
+  ) { 
+    this.content = new ContentEntity('a', 'a', 'a', 'a', 'a');
   }
 
+  ngOnInit() {
+    this.content = this.contentService.get('iitr');
+  }
 }

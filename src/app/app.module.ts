@@ -14,6 +14,7 @@ import {MatButtonModule,
 import { AppRoutingModule } from './/app-routing.module';
 import { CmsPageComponent } from './cms-page/cms-page.component';
 import { HomeComponent } from './home/home.component';
+import {ContentService} from './services/content.service';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { HomeComponent } from './home/home.component';
     MatCardModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [ContentService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
