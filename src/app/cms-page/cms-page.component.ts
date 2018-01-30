@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ContentService } from '../services/content.service';
 import { ContentEntity } from '../entity/content.entity';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-cms-page',
@@ -12,12 +13,13 @@ export class CmsPageComponent implements OnInit {
   public content: ContentEntity;
 
   constructor(
-    private contentService: ContentService
-  ) { 
-    this.content = new ContentEntity('a', 'a', 'a', 'a', 'a');
+    private contentService: ContentService,
+    private route: ActivatedRoute
+  ) {
   }
 
   ngOnInit() {
+    const id = +this.route.snapshot.paramMap.get('id');
     this.content = this.contentService.get('iitr');
   }
 }

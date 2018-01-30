@@ -23,7 +23,7 @@ export class ContentService {
   public get(id: String): ContentEntity {
     let searchResult: ContentEntity;
     this.dataStore.forEach(element => {
-      if (element.id == id) {
+      if (element.id === id) {
         searchResult = element;
       }
     });
