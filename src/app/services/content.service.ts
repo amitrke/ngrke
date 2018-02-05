@@ -3,7 +3,7 @@ import { ContentEntity } from '../entity/content.entity';
 import { Response, Http, RequestOptionsArgs} from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
 
@@ -14,21 +14,13 @@ export class ContentService {
 
   constructor(private http: HttpClient) {
   }
-/*
-  list(): Promise<ContentEntity[]> {
-    return this.http.post('https://us-central1-myrke-189201.cloudfunctions.net/list', '{"kind":"Content","select":["description"]}')
-       .toPromise()
-        .then(response => response.json() as ContentEntity[])
-        .catch(this.handleError);
-  }
-*/
+
   get(id: String): Observable<any> {
     const body = {'kind': 'Content', 'key': 'iitr'};
     const httpOptions = { 'headers': {'Content-Type': 'application/json'}};
 
-    return this.http.post(this.serviceURL + 'get', body, httpOptions)
+    return this.http.get(this.serviceURL + 'get?kind=Content&key=iitr', httpOptions)
         .pipe(
-          retry(1),
           catchError(this.handleError)
         );
   }
@@ -47,6 +39,5 @@ export class ContentService {
     // return an ErrorObservable with a user-facing error message
     return new ErrorObservable(
       'Something bad happened; please try again later.');
-  };
-
+  }
 }
