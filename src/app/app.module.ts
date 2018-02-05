@@ -15,6 +15,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { CmsPageComponent } from './cms-page/cms-page.component';
 import { HomeComponent } from './home/home.component';
 import {ContentService} from './services/content.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import {ContentService} from './services/content.service';
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatIconModule,

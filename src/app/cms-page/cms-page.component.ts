@@ -20,6 +20,7 @@ export class CmsPageComponent implements OnInit {
 
   ngOnInit() {
     const id = +this.route.snapshot.paramMap.get('id');
-    this.content = this.contentService.get('iitr');
+    this.contentService.get('iitr')
+      .subscribe(content => this.content = content);
   }
 }
