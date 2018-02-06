@@ -16,10 +16,7 @@ export class ContentService {
   }
 
   get(id: String): Observable<any> {
-    const body = {'kind': 'Content', 'key': 'iitr'};
-    const httpOptions = { 'headers': {'Content-Type': 'application/json'}};
-
-    return this.http.get(this.serviceURL + 'get?kind=Content&key=iitr', httpOptions)
+    return this.http.get(this.serviceURL + 'get?kind=Content&key=' + id)
         .pipe(
           catchError(this.handleError)
         );
