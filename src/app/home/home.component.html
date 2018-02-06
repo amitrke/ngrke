@@ -4,4 +4,7 @@
   <mat-card-content>
       {{content.description}}
   </mat-card-content>
+  <mat-card-actions>
+    <button mat-button (click)="moreBtnClick('page/'+content.key.name);">More</button>
+  </mat-card-actions>
 </mat-card>
