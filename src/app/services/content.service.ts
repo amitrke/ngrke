@@ -22,6 +22,13 @@ export class ContentService {
         );
   }
 
+  list(): Observable<any> {
+    return this.http.get(this.serviceURL + 'list?kind=Content')
+        .pipe(
+          catchError(this.handleError)
+        );
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
