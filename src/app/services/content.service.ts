@@ -23,7 +23,7 @@ export class ContentService {
   }
 
   list(): Observable<any> {
-    return this.http.get(this.serviceURL + 'list?kind=Content')
+    return this.http.get('https://beta.roorkee.org/api/content/')
         .pipe(
           catchError(this.handleError)
         );

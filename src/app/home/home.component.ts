@@ -13,7 +13,6 @@ export class HomeComponent implements OnInit {
 
   contentList$: Observable<ContentEntity[]>;
 
-
   constructor(
     private router: Router,
     private contentService: ContentService
