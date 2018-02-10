@@ -10,20 +10,20 @@ import { HttpErrorResponse } from '@angular/common/http/src/response';
 @Injectable()
 export class ContentService {
 
-  private serviceURL = 'https://us-central1-myrke-189201.cloudfunctions.net/';
+  private serviceURL = 'https://beta.roorkee.org/api/content/';
 
   constructor(private http: HttpClient) {
   }
 
   get(id: String): Observable<any> {
-    return this.http.get(this.serviceURL + 'get?kind=Content&key=' + id)
+    return this.http.get(this.serviceURL + id)
         .pipe(
           catchError(this.handleError)
         );
   }
 
   list(): Observable<any> {
-    return this.http.get('https://beta.roorkee.org/api/content/')
+    return this.http.get(this.serviceURL)
         .pipe(
           catchError(this.handleError)
         );
