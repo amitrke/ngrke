@@ -1,3 +1,5 @@
-<h1 class="mat-display-1">{{content.title}}</h1>
-<img src="{{content.imageURL}}" style="float:left"/>
-{{content.fullText}}
+<mat-card>
+    <mat-card-title>{{content.title}}</mat-card-title>
+    <img mat-card-image src="{{content.imageURL}}">
+    <mat-card-content>{{content.fullText}}</mat-card-content>
+</mat-card>
