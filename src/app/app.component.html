@@ -1,13 +1,11 @@
-<mat-sidenav-container fullscreen>
-    <mat-sidenav #sidenav mode="side">
-        <mat-toolbar>
-            <mat-toolbar-row><span>Second Row</span></mat-toolbar-row>
-            <mat-toolbar-row><span>Third Row</span></mat-toolbar-row>
-        </mat-toolbar>
-    </mat-sidenav>
+<header>
     <mat-toolbar color="primary">
-        <button mat-button (click)="sidenav.toggle()" color="primary">
-            <mat-icon>menu</mat-icon>
+        <mat-menu #appMenu="matMenu">
+            <button mat-menu-item>Settings</button>
+            <button mat-menu-item>Help</button>
+        </mat-menu>
+        <button mat-icon-button [matMenuTriggerFor]="appMenu">
+            <mat-icon>more_vert</mat-icon>
         </button>
         <span style="width:15px"></span>
         <a routerLink="/home" style="text-decoration : none; color : white">Roorkee.org</a>
@@ -21,5 +19,12 @@
         <mat-icon>account_circle</mat-icon>
         <span>Login</span>
     </mat-toolbar>
+</header>
+<main>
     <router-outlet></router-outlet>
-</mat-sidenav-container>
+</main>
+<footer>
+    <mat-toolbar color="primary">
+        Footer
+    </mat-toolbar>
+</footer>
