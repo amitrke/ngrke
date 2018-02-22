@@ -41,12 +41,16 @@ import { HomeComponent } from './home/home.component';
 import {ContentService} from './services/content.service';
 import { HttpClientModule } from '@angular/common/http';
 import {CdkTableModule} from '@angular/cdk/table';
+import { LoginComponent } from './login/login.component';
+import { GoogleSignInComponent } from 'angular-google-signin';
 
 @NgModule({
   declarations: [
     AppComponent,
     CmsPageComponent,
-    HomeComponent
+    HomeComponent,
+    LoginComponent,
+    GoogleSignInComponent
   ],
   imports: [
     BrowserModule,

@@ -193,6 +193,16 @@
   dependencies:
     typescript "~2.6.2"
 
+"@types/gapi.auth2@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/@types/gapi.auth2/-/gapi.auth2-0.0.31.tgz#3f917f99c1f18e0bf4e478214d8304ffad1c5def"
+  dependencies:
+    "@types/gapi" "*"
+
+"@types/gapi@*":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@types/gapi/-/gapi-0.0.35.tgz#8e0d672d66d8c6ce8493f5e8e550344f7ff500dc"
+
 "@types/jasmine@*", "@types/jasmine@~2.8.3":
   version "2.8.6"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.8.6.tgz#14445b6a1613cf4e05dd61c3c3256d0e95c0421e"
@@ -342,6 +352,12 @@ amqplib@^0.5.2:
     buffer-more-ints "0.0.2"
     readable-stream "1.x >=1.1.9"
     safe-buffer "^5.0.1"
+
+angular-google-signin@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/angular-google-signin/-/angular-google-signin-0.1.5.tgz#5506cc59e4c245620eb090e83869c7f4ca17513c"
+  dependencies:
+    "@types/gapi.auth2" "^0.0.31"
 
 ansi-html@0.0.7:
   version "0.0.7"
