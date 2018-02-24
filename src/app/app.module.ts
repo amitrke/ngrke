@@ -43,6 +43,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {CdkTableModule} from '@angular/cdk/table';
 import { LoginComponent } from './login/login.component';
 import { GoogleSignInComponent } from 'angular-google-signin';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -91,7 +92,7 @@ import { GoogleSignInComponent } from 'angular-google-signin';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [ContentService],
+  providers: [ContentService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
