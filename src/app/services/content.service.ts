@@ -6,11 +6,12 @@ import { Observable } from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ContentService {
 
-  private serviceURL = 'https://beta.roorkee.org/api/content/';
+  private serviceURL = environment.serviceURL + 'content/';
 
   constructor(private http: HttpClient) {
   }

@@ -5,13 +5,16 @@ import { catchError } from 'rxjs/operators';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
 import { UserEntity } from '../entity/user.entity';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class UserService {
 
-  private serviceURL = 'https://beta.roorkee.org/api/user/';
+  private serviceURL = environment.serviceURL + 'user/';
 
   constructor(private http: HttpClient) { }
+
+  public cachedUser: UserEntity;
 
   get(id: String): Observable<any> {
     return this.http.get(this.serviceURL + id)
