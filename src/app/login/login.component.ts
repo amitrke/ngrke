@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,
+  Output,
+  EventEmitter,
+  OnInit,
+  ChangeDetectorRef
+ } from '@angular/core';
 import { GoogleSignInSuccess } from 'angular-google-signin';
 import { UserEntity } from '../entity/user.entity';
 import { UserService } from '../services/user.service';
@@ -11,10 +16,21 @@ import { UserService } from '../services/user.service';
 export class LoginComponent implements OnInit {
 
   private myClientId = '670134176077-h5g5nn6catjdo2uoo36d5eji03ccf186.apps.googleusercontent.com';
+  @Output() loginEvent = new EventEmitter<UserEntity>();
+  public loggedIn = false;
+  public loggedInUser: UserEntity;
 
-  constructor(private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
+    if (this.userService.cachedUser != null) {
+      console.log('There is a cached user ');
+      this.loggedIn = true;
+      this.loggedInUser = this.userService.cachedUser;
+    }
   }
 
   onGoogleSignInSuccess(event: GoogleSignInSuccess) {
@@ -24,7 +40,7 @@ export class LoginComponent implements OnInit {
 
     this.userService.get(profile.getId()).subscribe(value => {
         if (value) {
-          this.userService.cachedUser = value;
+          this.setLoggedInUserFlags(value);
         }
       }, error => {
         if (error) {
@@ -33,6 +49,14 @@ export class LoginComponent implements OnInit {
         }
       }
     );
+  }
+
+  setLoggedInUserFlags(user: UserEntity) {
+    this.userService.cachedUser = user;
+    this.loggedInUser = user;
+    this.loggedIn = true;
+    this.loginEvent.emit(user);
+    this.changeDetectorRef.detectChanges();
   }
 
   registerUser(profile: gapi.auth2.BasicProfile) {
@@ -45,7 +69,8 @@ export class LoginComponent implements OnInit {
     );
     this.userService.create(user).subscribe(value => {
       if (value) {
-        console.log('Registeration complete');
+        console.log('Registration complete');
+        this.setLoggedInUserFlags(user);
       }
     }, error => {
       if (error) {

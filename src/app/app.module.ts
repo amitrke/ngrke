@@ -44,6 +44,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import { LoginComponent } from './login/login.component';
 import { GoogleSignInComponent } from 'angular-google-signin';
 import { UserService } from './services/user.service';
+import { SubpicComponent } from './subpic/subpic.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { UserService } from './services/user.service';
     CmsPageComponent,
     HomeComponent,
     LoginComponent,
-    GoogleSignInComponent
+    GoogleSignInComponent,
+    SubpicComponent
   ],
   imports: [
     BrowserModule,

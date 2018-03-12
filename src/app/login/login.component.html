@@ -1,10 +1,27 @@
-<google-signin
-  [clientId]="myClientId"
-  [width]="myWidth"
-  [theme]="myTheme"
-  [scope]="myScope"
-  [longTitle]="myLongTitle"
-  (googleSignInSuccess)="onGoogleSignInSuccess($event)">
-</google-signin>
+<div *ngIf="loggedIn;else preLoginContent">
+  <h1 class="mat-display-1">My Account</h1>
+  <img src="{{loggedInUser.imageURL}}">
+  <h2 class="mat-h2">Welcome {{loggedInUser.name}}</h2>
+  
+  <mat-tab-group>
+    <mat-tab label="Submit a picture">
+      <app-subpic></app-subpic>
+    </mat-tab>
+    <mat-tab label="Manage my pictures">Manage my pictures</mat-tab>
+    <mat-tab label="Submit a Content">Submit a Content</mat-tab>
+    <mat-tab label="Manage my Content">Manage my Content</mat-tab>
+  </mat-tab-group>
 
+  <hr>
 Logout
+</div>
+<ng-template #preLoginContent>
+  <google-signin
+    [clientId]="myClientId"
+    [width]="myWidth"
+    [theme]="myTheme"
+    [scope]="myScope"
+    [longTitle]="myLongTitle"
+    (googleSignInSuccess)="onGoogleSignInSuccess($event)">
+  </google-signin>
+</ng-template>
