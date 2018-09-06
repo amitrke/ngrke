@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class ContentService {
 
-  private serviceURL = environment.serviceURL + 'content/';
+  private serviceURL = environment.serviceURL + 'articles/';
 
   constructor(private http: HttpClient) {
   }
