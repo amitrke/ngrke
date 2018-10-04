@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class UserService {
 
-  private serviceURL = environment.serviceURL + 'user/';
+  private serviceURL = environment.serviceURL + 'users/';
 
   constructor(private http: HttpClient) { }
 
@@ -21,6 +21,13 @@ export class UserService {
         .pipe(
           catchError(this.handleError)
         );
+  }
+
+  search(user: UserEntity): Observable<any> {
+      return this.http.post(this.serviceURL + 'search', user)
+        .pipe(
+          catchError(this.handleError)
+      );
   }
 
   create(user: UserEntity): Observable<any> {

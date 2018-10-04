@@ -38,9 +38,13 @@ export class LoginComponent implements OnInit {
     const id: string = googleUser.getId();
     const profile: gapi.auth2.BasicProfile = googleUser.getBasicProfile();
 
-    this.userService.get(profile.getId()).subscribe(value => {
-        if (value) {
-          this.setLoggedInUserFlags(value);
+    const user: UserEntity = new UserEntity(undefined, profile.getId(), undefined, undefined, undefined, undefined);
+
+    this.userService.search(user).subscribe(value => {
+        if (value.length > 0) {
+          this.setLoggedInUserFlags(value[0]);
+        } else {
+          this.registerUser(profile);
         }
       }, error => {
         if (error) {
@@ -61,6 +65,7 @@ export class LoginComponent implements OnInit {
 
   registerUser(profile: gapi.auth2.BasicProfile) {
     const user: UserEntity = new UserEntity(
+      undefined,
       profile.getId(),
       profile.getName(),
       profile.getEmail(),
