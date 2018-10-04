@@ -1,8 +1,4 @@
 <form>
-  <mat-form-field>
-    <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
-  </mat-form-field>
-  <div>
-    <button mat-button>Next</button>
-  </div>
+    <input type="file" id="file" (change)="handleFileInput($event.target.files)"/>
+    <button (click)="uploadFileToActivity();">Go</button>
 </form>

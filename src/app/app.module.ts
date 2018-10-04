@@ -44,6 +44,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import { LoginComponent } from './login/login.component';
 import { GoogleSignInComponent } from 'angular-google-signin';
 import { UserService } from './services/user.service';
+import { FileuploadService } from './services/fileupload.service';
 import { SubpicComponent } from './subpic/subpic.component';
 
 @NgModule({
@@ -94,7 +95,7 @@ import { SubpicComponent } from './subpic/subpic.component';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [ContentService, UserService],
+  providers: [ContentService, UserService, FileuploadService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
