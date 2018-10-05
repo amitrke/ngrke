@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileuploadService } from '../services/fileupload.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-subpic',
@@ -10,7 +11,8 @@ import { FileuploadService } from '../services/fileupload.service';
 export class SubpicComponent implements OnInit {
 
   constructor(
-    private fileUploadService: FileuploadService
+    private fileUploadService: FileuploadService,
+    private userService: UserService
   ) { }
 
   fileToUpload: File = null;
@@ -21,11 +23,11 @@ export class SubpicComponent implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-    console.log('handleFileInput');
   }
 
   uploadFileToActivity() {
-    this.fileUploadService.postFile(this.fileToUpload).subscribe(data => {
+    const fileName = 'users/' + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
+    this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(data => {
         console.log(data);
       }, error => {
         console.log(error);
