@@ -15,4 +15,8 @@ export class FileuploadService {
     formData.append('fileKey', fileToUpload, fileToUpload.name);
     return this.http.post(this.serviceURL, formData, { headers: {'filename': fileName}});
   }
+
+  listFiles(folder: string): Observable<any> {
+    return this.http.get(this.serviceURL, { headers: {'folder': folder}});
+  }
 }

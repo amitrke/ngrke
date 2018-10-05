@@ -46,6 +46,9 @@ import { GoogleSignInComponent } from 'angular-google-signin';
 import { UserService } from './services/user.service';
 import { FileuploadService } from './services/fileupload.service';
 import { SubpicComponent } from './subpic/subpic.component';
+import { ListpicsComponent } from './myacc/listpics/listpics.component';
+import { ListpostsComponent } from './myacc/listposts/listposts.component';
+import { EditpostComponent } from './myacc/editpost/editpost.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +57,10 @@ import { SubpicComponent } from './subpic/subpic.component';
     HomeComponent,
     LoginComponent,
     GoogleSignInComponent,
-    SubpicComponent
+    SubpicComponent,
+    EditpostComponent,
+    ListpicsComponent,
+    ListpostsComponent
   ],
   imports: [
     BrowserModule,
