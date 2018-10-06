@@ -1,3 +1,8 @@
 <mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let item of imageList;">{{item}}</mat-list-item>
+    <mat-list-item role="listitem" *ngFor="let item of imageList;">
+      {{item}} 
+      <mat-icon>delete</mat-icon> 
+      <mat-icon>edit</mat-icon>
+      <mat-icon>open_in_new</mat-icon>
+    </mat-list-item>
 </mat-list>
