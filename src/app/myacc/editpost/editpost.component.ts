@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FileuploadService } from '../../services/fileupload.service';
 import { UserService } from '../../services/user.service';
 import { ContentEntity } from '../../entity/content.entity';
+import { ContentService } from '../../services/content.service';
 
 @Component({
   selector: 'app-editpost',
@@ -14,13 +15,15 @@ export class EditpostComponent implements OnInit {
 
   constructor(
     private fileUploadService: FileuploadService,
-    private userService: UserService
+    private userService: UserService,
+    private contentService: ContentService
   ) { }
 
-  model = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
+  model = new ContentEntity(undefined, undefined, undefined, undefined, 100);
 
   ngOnInit() {
     if (this.userService.cachedUser != null) {
+      this.model.userId = this.userService.cachedUser.id;
       const folder = 'users/' + this.userService.cachedUser.id;
       this.fileUploadService.listFiles(folder).subscribe(data => {
         this.imageList = data;
@@ -30,8 +33,14 @@ export class EditpostComponent implements OnInit {
     }
   }
 
-  submitForm() {
+  onSubmit() {
     console.log('Form submit');
+    this.contentService.save(this.model).subscribe(data => {
+      console.log(data);
+    },
+    error => {
+      console.log(error);
+    });
   }
   // get diagnostic() { return JSON.stringify(this.model); }
 }
