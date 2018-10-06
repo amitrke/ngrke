@@ -21,7 +21,6 @@ export class ListpicsComponent implements OnInit {
       const folder = 'users/' + this.userService.cachedUser.id;
       this.fileUploadService.listFiles(folder).subscribe(data => {
         this.imageList = data;
-        console.log(data);
       }, error => {
         console.log(error);
       });

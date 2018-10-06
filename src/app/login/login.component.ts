@@ -27,7 +27,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     if (this.userService.cachedUser != null) {
-      console.log('There is a cached user ');
       this.loggedIn = true;
       this.loggedInUser = this.userService.cachedUser;
     }
