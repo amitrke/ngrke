@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
-import {MatAutocompleteModule,
+import { FormsModule } from '@angular/forms';
+import {
+  MatAutocompleteModule,
   MatButtonModule,
   MatButtonToggleModule,
   MatCardModule,
@@ -67,7 +69,7 @@ import { EditpostComponent } from './myacc/editpost/editpost.component';
     HttpClientModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-
+    FormsModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,

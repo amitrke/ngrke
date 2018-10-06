@@ -1,21 +1,23 @@
-<div class="article-form-container">
+<form #postForm="ngForm" (ngSubmit)="onSubmit()">
+  <div class="article-form-container">
     <mat-form-field>
-      <input matInput placeholder="Title">
+      <input matInput id="title" required [(ngModel)]="model.title" name="title" placeholder="Title">
     </mat-form-field>
   
     <mat-form-field>
-      <textarea matInput placeholder="Description"></textarea>
+      <textarea matInput id="description" required [(ngModel)]="model.description" name="description" placeholder="Description"></textarea>
     </mat-form-field>
   
     <mat-form-field>
-      <textarea matInput placeholder="Body"></textarea>
+      <textarea matInput id="fullText" required [(ngModel)]="model.fullText" name="fullText" placeholder="Body"></textarea>
     </mat-form-field>
   
     <mat-form-field>
-      <mat-select placeholder="Image">
-        <mat-option value="option">Option</mat-option>
+      <mat-select id="imageURL" required [(ngModel)]="model.imageURL" name="imageURL" placeholder="Image">
+        <mat-option *ngFor="let item of imageList;" value="{{item}}">{{item}}</mat-option>
       </mat-select>
     </mat-form-field>
   
-    <button mat-button>Submit</button>
+    <button mat-button [disabled]="!postForm.form.valid">Submit</button>
   </div>
+</form>
