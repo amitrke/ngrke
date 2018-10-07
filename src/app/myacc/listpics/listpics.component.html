@@ -1,7 +1,9 @@
 <mat-list role="list">
     <mat-list-item role="listitem" *ngFor="let item of imageList;">
-      {{item}} 
-      <mat-icon>delete</mat-icon> 
+      {{item}}
+      <button mat-icon-button (click)="onDelete(item)">
+        <mat-icon>delete</mat-icon> 
+      </button>
       <mat-icon>edit</mat-icon>
       <mat-icon>open_in_new</mat-icon>
     </mat-list-item>

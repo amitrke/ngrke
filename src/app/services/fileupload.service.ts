@@ -19,4 +19,8 @@ export class FileuploadService {
   listFiles(folder: string): Observable<any> {
     return this.http.get(this.serviceURL, { headers: {'folder': folder}});
   }
+
+  delete(filename: string): Observable<any> {
+    return this.http.delete(this.serviceURL, {headers: {'filename': filename}});
+  }
 }
