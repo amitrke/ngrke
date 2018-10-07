@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 export class FileuploadService {
 
   private serviceURL = environment.serviceURL + 'image/';
+  public uploadBaseFolder = 'assets/img/users/';
 
   constructor(private http: HttpClient) { }
 

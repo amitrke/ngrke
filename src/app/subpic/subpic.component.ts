@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
+import { FormGroup, NgForm } from '@angular/forms';
 import { FileuploadService } from '../services/fileupload.service';
 import { UserService } from '../services/user.service';
 
@@ -27,7 +27,7 @@ export class SubpicComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    const fileName = 'assets/img/users/' + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
+    const fileName = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
     this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(data => {
         this.fileUploaded = true;
         form.resetForm();
