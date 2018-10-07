@@ -27,7 +27,7 @@ export class SubpicComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    const fileName = 'users/' + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
+    const fileName = 'assets/img/users/' + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
     this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(data => {
         this.fileUploaded = true;
         form.resetForm();
