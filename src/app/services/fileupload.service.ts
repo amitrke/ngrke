@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -14,7 +14,8 @@ export class FileuploadService {
   postFile(fileToUpload: File, fileName: string): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('fileKey', fileToUpload, fileToUpload.name);
-    return this.http.post(this.serviceURL, formData, { headers: {'filename': fileName}});
+    return this.http.post(this.serviceURL, formData,
+      { headers: {'filename': fileName, 'enctype': 'multipart/form-data'}, reportProgress: true});
   }
 
   listFiles(folder: string): Observable<any> {

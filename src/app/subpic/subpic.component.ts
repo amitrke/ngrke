@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { FileuploadService } from '../services/fileupload.service';
 import { UserService } from '../services/user.service';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-subpic',
@@ -28,10 +29,20 @@ export class SubpicComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     const fileName = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
-    this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(data => {
-        this.fileUploaded = true;
-      }, error => {
-        console.log(error);
-      });
+    this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(
+      event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          const percentDone = Math.round(100 * event.loaded / event.total);
+          console.log(`File is ${percentDone}% loaded.`);
+        } else if (event instanceof HttpResponse) {
+          console.log('File is completely loaded!');
+        }
+      },
+      (err) => {
+        console.log('Upload Error:', err);
+      }, () => {
+        console.log('Upload done');
+      }
+    );
   }
 }
