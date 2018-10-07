@@ -22,7 +22,7 @@ export class ListpicsComponent implements OnInit {
 
   updateFilesList() {
     if (this.userService.cachedUser != null) {
-      const folder = 'users/' + this.userService.cachedUser.id;
+      const folder = 'assets/img/users/' + this.userService.cachedUser.id;
       this.fileUploadService.listFiles(folder).subscribe(data => {
         this.imageList = data;
       }, error => {
