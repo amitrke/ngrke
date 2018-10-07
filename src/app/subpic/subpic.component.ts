@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
 import { FileuploadService } from '../services/fileupload.service';
 import { UserService } from '../services/user.service';
 
@@ -17,6 +17,7 @@ export class SubpicComponent implements OnInit {
 
   fileToUpload: File = null;
   firstFormGroup: FormGroup;
+  fileUploaded = false;
 
   ngOnInit() {
   }
@@ -25,10 +26,11 @@ export class SubpicComponent implements OnInit {
     this.fileToUpload = files.item(0);
   }
 
-  uploadFileToActivity() {
+  onSubmit(form: NgForm) {
     const fileName = 'users/' + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
     this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(data => {
-        console.log(data);
+        this.fileUploaded = true;
+        form.resetForm();
       }, error => {
         console.log(error);
       });

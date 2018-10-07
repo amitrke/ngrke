@@ -1,4 +1,7 @@
-
-    <input type="file" id="file" (change)="handleFileInput($event.target.files)"/>
-    <button (click)="uploadFileToActivity();">Submit</button>
-
+<div *ngIf="fileUploaded">File upload success !</div>
+<form #picForm="ngForm" (ngSubmit)="onSubmit(picForm)">
+    <div>
+        <input type="file" required id="file" (change)="handleFileInput($event.target.files)"/>
+        <button mat-button [disabled]="!picForm.form.valid">Submit</button>
+    </div>
+</form>
