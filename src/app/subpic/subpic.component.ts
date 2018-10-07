@@ -30,7 +30,6 @@ export class SubpicComponent implements OnInit {
     const fileName = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
     this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(data => {
         this.fileUploaded = true;
-        form.resetForm();
       }, error => {
         console.log(error);
       });
