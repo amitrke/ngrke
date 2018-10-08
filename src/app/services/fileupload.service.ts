@@ -12,9 +12,7 @@ export class FileuploadService {
   constructor(private http: HttpClient) { }
 
   postFile(fileToUpload: File, fileName: string): Observable<any> {
-    const formData: FormData = new FormData();
-    formData.append('fileKey', fileToUpload, fileToUpload.name);
-    return this.http.post(this.serviceURL, formData,
+    return this.http.post(this.serviceURL, fileToUpload,
       { headers: {'filename': fileName, 'enctype': 'multipart/form-data'}, reportProgress: true});
   }
 
