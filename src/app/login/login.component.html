@@ -1,24 +1,27 @@
 <div *ngIf="loggedIn;else preLoginContent">
-    <mat-grid-list cols="2" rowHeight="100px">
-        <mat-grid-tile><h2 class="mat-h2" style="text-align: left">My Account</h2></mat-grid-tile>
-        <mat-grid-tile><img src="{{loggedInUser.imageURL}}"></mat-grid-tile>
-    </mat-grid-list>
-  <mat-tab-group>
-    <mat-tab label="Submit a picture">
-      <app-subpic></app-subpic>
-    </mat-tab>
-    <mat-tab label="Manage my pictures">
-      <app-listpics></app-listpics>
-    </mat-tab>
-    <mat-tab label="Submit a Content">
-      <app-editpost></app-editpost>
-    </mat-tab>
-    <mat-tab label="Manage my Content">Manage my Content</mat-tab>
-  </mat-tab-group>
-
+  <div>
+    <h2 class="mat-h2" style="text-align: left">My Account</h2>
+    <img src="{{loggedInUser.imageURL}}">
+  </div>
+</div>
+  <div>
+    <mat-tab-group>
+      <mat-tab label="Submit a picture">
+        <app-subpic></app-subpic>
+      </mat-tab>
+      <mat-tab label="Manage my pictures">
+        <app-listpics></app-listpics>
+      </mat-tab>
+      <mat-tab label="Submit a Content">
+        <app-editpost></app-editpost>
+      </mat-tab>
+      <mat-tab label="Manage my Content">
+        <app-listposts></app-listposts>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
   <hr>
 Logout
-</div>
 <ng-template #preLoginContent>
   <google-signin
     [clientId]="myClientId"
