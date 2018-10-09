@@ -30,6 +30,13 @@ export class ContentService {
         );
   }
 
+  search(article: ContentEntity): Observable<any> {
+    return this.http.post(this.serviceURL + 'search', article)
+      .pipe(
+        catchError(this.handleError)
+    );
+  }
+  
   save(model: ContentEntity): Observable<any> {
     return this.http.post(this.serviceURL, model).pipe(
       catchError(this.handleError)
