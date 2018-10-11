@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  serviceURL: 'http://localhost:8080/api/'
+  serviceURL: 'http://localhost:8080/api/',
+  uploadServerURL: 'http://localhost:8080/'
 };
