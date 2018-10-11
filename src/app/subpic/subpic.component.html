@@ -2,6 +2,6 @@
 <form #picForm="ngForm" (ngSubmit)="onSubmit(picForm)">
     <div>
         <input type="file" id="file" (change)="handleFileInput($event.target.files)"/>
-        <button mat-button [disabled]="!fileToUpload">Submit</button>
+        <button mat-button>Submit</button>
     </div>
 </form>
