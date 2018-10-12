@@ -8,10 +8,12 @@ export class FileuploadService {
 
   private serviceURL = environment.serviceURL + 'image/';
   public uploadBaseFolder = 'upload/users/';
+  public imageListCache = [];
 
   constructor(private http: HttpClient) { }
 
   postFile(fileToUpload: File, fileName: string): Observable<any> {
+    this.imageListCache = [];
     return this.http.post(this.serviceURL, fileToUpload,
       { headers: {'filename': fileName, 'enctype': 'multipart/form-data'}, reportProgress: true});
   }
@@ -21,6 +23,7 @@ export class FileuploadService {
   }
 
   delete(filename: string): Observable<any> {
+    this.imageListCache = [];
     return this.http.delete(this.serviceURL, {headers: {'filename': filename}});
   }
 }

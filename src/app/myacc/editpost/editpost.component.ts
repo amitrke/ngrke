@@ -24,12 +24,6 @@ export class EditpostComponent implements OnInit {
   ngOnInit() {
     if (this.userService.cachedUser != null) {
       this.model.userId = this.userService.cachedUser.id;
-      const folder = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id;
-      this.fileUploadService.listFiles(folder).subscribe(data => {
-        this.imageList = data;
-      }, error => {
-        console.log(error);
-      });
     }
   }
 

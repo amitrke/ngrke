@@ -14,7 +14,7 @@
   
     <mat-form-field>
       <mat-select id="imageURL" required [(ngModel)]="model.imageURL" name="imageURL" placeholder="Image">
-        <mat-option *ngFor="let item of imageList;" value="{{item}}">{{item}}</mat-option>
+        <mat-option *ngFor="let item of fileUploadService.imageListCache;" value="{{item}}">{{item}}</mat-option>
       </mat-select>
     </mat-form-field>
   

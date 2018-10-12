@@ -27,6 +27,17 @@ export class SubpicComponent implements OnInit {
     this.fileToUpload = files.item(0);
   }
 
+  updateFilesList() {
+    if (this.userService.cachedUser != null) {
+      const folder = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id;
+      this.fileUploadService.listFiles(folder).subscribe(data => {
+        this.fileUploadService.imageListCache = data;
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
   onSubmit(form: NgForm) {
     const fileName = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
     this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(
@@ -36,6 +47,7 @@ export class SubpicComponent implements OnInit {
           console.log(`File is ${percentDone}% loaded.`);
         } else if (event instanceof HttpResponse) {
           console.log('File is completely loaded!');
+          this.updateFilesList();
         }
       },
       (err) => {

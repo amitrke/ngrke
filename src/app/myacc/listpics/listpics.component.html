@@ -1,5 +1,5 @@
 <mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let item of imageList;">
+    <mat-list-item role="listitem" *ngFor="let item of fileUploadService.imageListCache;">
       {{item}}
       <button mat-icon-button (click)="onDelete(item)">
         <mat-icon>delete</mat-icon> 

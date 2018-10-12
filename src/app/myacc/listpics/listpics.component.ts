@@ -17,7 +17,9 @@ export class ListpicsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.updateFilesList();
+    if (this.fileUploadService.imageListCache.length === 0) {
+      this.updateFilesList();
+    }
   }
 
   updateFilesList() {
@@ -25,11 +27,13 @@ export class ListpicsComponent implements OnInit {
       const folder = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id;
       this.fileUploadService.listFiles(folder).subscribe(data => {
         this.imageList = data;
+        this.fileUploadService.imageListCache = data;
       }, error => {
         console.log(error);
       });
     }
   }
+
   onDelete(fileName: string) {
     this.fileUploadService.delete(fileName).subscribe(data => {
       this.updateFilesList();
