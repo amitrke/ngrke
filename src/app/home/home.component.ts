@@ -12,8 +12,9 @@ import { environment } from '../../environments/environment';
 })
 export class HomeComponent implements OnInit {
 
-  contentList$: Observable<ContentEntity[]>;
+  contentList: ContentEntity[];
   public uploadServerURL: string;
+  public error: boolean;
 
   constructor(
     private router: Router,
@@ -21,7 +22,12 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.contentList$ = this.contentService.list();
+    this.contentService.list().subscribe(data => {
+      this.contentList = data;
+    }, error => {
+        this.error = true;
+        console.error(error);
+    });
     this.uploadServerURL = environment.uploadServerURL;
   }
 

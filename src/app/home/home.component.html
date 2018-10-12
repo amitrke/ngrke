@@ -1,4 +1,10 @@
-<mat-card *ngFor="let content of contentList$ | async" class="home-card">
+<div *ngIf="!error && !contentList">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="error">
+  An error occurred while communicating with the server, please try again later.
+</div>
+<mat-card *ngFor="let content of contentList" class="home-card">
   <mat-card-title>{{content.title}}</mat-card-title>
   <img mat-card-image src="{{uploadServerURL}}/{{content.imageURL}}">
   <mat-card-content>
