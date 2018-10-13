@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FileuploadService } from '../../services/fileupload.service';
 import { UserService } from '../../services/user.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-listpics',
@@ -10,6 +11,7 @@ import { UserService } from '../../services/user.service';
 export class ListpicsComponent implements OnInit {
 
   public imageList: string[];
+  public uploadServerURL: string;
 
   constructor(
     private fileUploadService: FileuploadService,
@@ -20,6 +22,7 @@ export class ListpicsComponent implements OnInit {
     if (this.fileUploadService.imageListCache.length === 0) {
       this.updateFilesList();
     }
+    this.uploadServerURL = environment.uploadServerURL;
   }
 
   updateFilesList() {

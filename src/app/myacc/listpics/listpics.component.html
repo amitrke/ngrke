@@ -1,10 +1,11 @@
-<mat-list role="list">
-    <mat-list-item role="listitem" *ngFor="let item of fileUploadService.imageListCache;">
-      {{item}}
-      <button mat-icon-button (click)="onDelete(item)">
-        <mat-icon>delete</mat-icon> 
-      </button>
-      <mat-icon>edit</mat-icon>
-      <mat-icon>open_in_new</mat-icon>
-    </mat-list-item>
-</mat-list>
+<mat-card *ngFor="let item of fileUploadService.imageListCache" class="home-card">
+  <mat-card-title>{{item | splitAndGet:"/":3}}</mat-card-title>
+  <img mat-card-image src="{{uploadServerURL}}/{{item}}">
+  <mat-card-actions>
+    <button mat-icon-button (click)="onDelete(item)">
+      <mat-icon>delete</mat-icon> 
+    </button>
+    <mat-icon>edit</mat-icon>
+    <mat-icon>open_in_new</mat-icon>
+  </mat-card-actions>
+</mat-card>

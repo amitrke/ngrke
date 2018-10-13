@@ -51,6 +51,7 @@ import { SubpicComponent } from './subpic/subpic.component';
 import { ListpicsComponent } from './myacc/listpics/listpics.component';
 import { ListpostsComponent } from './myacc/listposts/listposts.component';
 import { EditpostComponent } from './myacc/editpost/editpost.component';
+import { SplitAndGetPipe } from './pipes/splitandget';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { EditpostComponent } from './myacc/editpost/editpost.component';
     SubpicComponent,
     EditpostComponent,
     ListpicsComponent,
-    ListpostsComponent
+    ListpostsComponent,
+    SplitAndGetPipe
   ],
   imports: [
     BrowserModule,
