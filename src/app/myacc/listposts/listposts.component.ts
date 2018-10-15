@@ -14,10 +14,15 @@ export class ListpostsComponent implements OnInit {
     private contentService: ContentService
   ) { }
 
+  contentList: UserService[] = [];
+
   ngOnInit() {
     if (this.userService.cachedUser != null) {
-
     }
+  }
+
+  fetchData() {
+    // this.contentService.list()
   }
 
 }

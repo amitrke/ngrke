@@ -1,18 +1,20 @@
-import { Component, OnInit, OnChanges, DoCheck } from '@angular/core';
+import { Component, OnInit, OnChanges, DoCheck, Input, SimpleChange, SimpleChanges } from '@angular/core';
 import { FileuploadService } from '../../services/fileupload.service';
 import { UserService } from '../../services/user.service';
 import { ContentEntity } from '../../entity/content.entity';
 import { ContentService } from '../../services/content.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatTabChangeEvent } from '@angular/material';
 
 @Component({
   selector: 'app-editpost',
   templateUrl: './editpost.component.html',
   styleUrls: ['./editpost.component.scss']
 })
-export class EditpostComponent implements OnInit, DoCheck {
+export class EditpostComponent implements OnInit, DoCheck, OnChanges {
 
   public imageList: string[] = [];
+
+  @Input() tabChangeEvent: MatTabChangeEvent;
 
   constructor(
     private fileUploadService: FileuploadService,
@@ -22,6 +24,12 @@ export class EditpostComponent implements OnInit, DoCheck {
   ) { }
 
   model = new ContentEntity(undefined, undefined, undefined, undefined, 100);
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['tabChangeEvent'] && this.tabChangeEvent && this.tabChangeEvent.index === 2) {
+      console.log('bingo');
+    }
+  }
 
   ngOnInit() {
     if (this.userService.cachedUser != null) {
@@ -34,6 +42,10 @@ export class EditpostComponent implements OnInit, DoCheck {
     if (this.imageList.length !== this.fileUploadService.imageListCache.length) {
       this.imageList = this.fileUploadService.imageListCache;
     }
+  }
+
+  onTabFocus() {
+    console.log('Edit post onTabFocus');
   }
 
   onSubmit() {
