@@ -3,6 +3,7 @@ import { UserService } from '../../services/user.service';
 import { ContentService } from '../../services/content.service';
 import { MatTabChangeEvent } from '@angular/material';
 import { ContentEntity } from '../../entity/content.entity';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-listposts',
@@ -19,7 +20,9 @@ export class ListpostsComponent implements OnInit, OnChanges  {
   @Input() tabChangeEvent: MatTabChangeEvent;
 
   contentList: UserService[] = [];
-
+  
+  public uploadServerURL: string;
+  
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tabChangeEvent'] && this.tabChangeEvent && this.tabChangeEvent.index === 3) {
       this.fetchData();
@@ -27,6 +30,7 @@ export class ListpostsComponent implements OnInit, OnChanges  {
   }
 
   ngOnInit() {
+    this.uploadServerURL = environment.uploadServerURL;
     if (this.userService.cachedUser != null) {
       this.fetchData();
     }
