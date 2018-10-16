@@ -3,7 +3,7 @@ import { UserService } from '../../services/user.service';
 import { ContentService } from '../../services/content.service';
 import { MatTabChangeEvent } from '@angular/material';
 import { ContentEntity } from '../../entity/content.entity';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-listposts',
