@@ -10,7 +10,7 @@ import { MatSnackBar, MatTabChangeEvent } from '@angular/material';
   templateUrl: './editpost.component.html',
   styleUrls: ['./editpost.component.scss']
 })
-export class EditpostComponent implements OnInit, DoCheck, OnChanges {
+export class EditpostComponent implements OnInit, OnChanges {
 
   public imageList: string[] = [];
 
@@ -27,7 +27,9 @@ export class EditpostComponent implements OnInit, DoCheck, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tabChangeEvent'] && this.tabChangeEvent && this.tabChangeEvent.index === 2) {
-      console.log('bingo');
+      if (this.imageList.length !== this.fileUploadService.imageListCache.length) {
+        this.imageList = this.fileUploadService.imageListCache;
+      }
     }
   }
 
@@ -36,16 +38,6 @@ export class EditpostComponent implements OnInit, DoCheck, OnChanges {
       this.model.userId = this.userService.cachedUser.id;
       this.imageList = this.fileUploadService.imageListCache;
     }
-  }
-
-  ngDoCheck() {
-    if (this.imageList.length !== this.fileUploadService.imageListCache.length) {
-      this.imageList = this.fileUploadService.imageListCache;
-    }
-  }
-
-  onTabFocus() {
-    console.log('Edit post onTabFocus');
   }
 
   onSubmit() {

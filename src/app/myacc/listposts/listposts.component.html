@@ -1,3 +1,14 @@
-<p>
-  listposts works!
-</p>
+<mat-card *ngFor="let item of contentList" class="home-card">
+    <mat-card-title>{{item.title}}</mat-card-title>
+    <img mat-card-image src="{{uploadServerURL}}/{{item.imageURL}}">
+    <mat-card-content>
+            {{item.description}}
+        </mat-card-content>
+    <mat-card-actions>
+      <button mat-icon-button>
+        <mat-icon>delete</mat-icon> 
+      </button>
+      <mat-icon>edit</mat-icon>
+      <mat-icon>open_in_new</mat-icon>
+    </mat-card-actions>
+  </mat-card>

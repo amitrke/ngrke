@@ -36,7 +36,7 @@ export class ContentService {
         catchError(this.handleError)
     );
   }
-  
+
   save(model: ContentEntity): Observable<any> {
     return this.http.post(this.serviceURL, model).pipe(
       catchError(this.handleError)

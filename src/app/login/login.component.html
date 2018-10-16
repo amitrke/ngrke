@@ -19,7 +19,7 @@
         <div [hidden]="loggedIn">Please login to use this feature</div>
       </mat-tab>
       <mat-tab label="Manage my Content">
-        <app-listposts *ngIf="loggedIn"></app-listposts>
+        <app-listposts *ngIf="loggedIn" [tabChangeEvent]="tabChangeEvent"></app-listposts>
         <div *ngIf="!loggedIn">Please login to use this feature</div>
       </mat-tab>
     </mat-tab-group>
