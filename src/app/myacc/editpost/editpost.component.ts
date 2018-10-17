@@ -14,7 +14,7 @@ export class EditpostComponent implements OnInit, OnChanges {
 
   public imageList: string[] = [];
 
-  @Input() tabChangeEvent: MatTabChangeEvent;
+  @Input() selectedTabIndex: number;
 
   constructor(
     private fileUploadService: FileuploadService,
@@ -26,7 +26,8 @@ export class EditpostComponent implements OnInit, OnChanges {
   model = new ContentEntity(undefined, undefined, undefined, undefined, 100);
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['tabChangeEvent'] && this.tabChangeEvent && this.tabChangeEvent.index === 2) {
+    if (changes['selectedTabIndex'] && this.selectedTabIndex && this.selectedTabIndex === 2) {
+      console.log('Edit post tab selected');
       if (this.imageList.length !== this.fileUploadService.imageListCache.length) {
         this.imageList = this.fileUploadService.imageListCache;
       }

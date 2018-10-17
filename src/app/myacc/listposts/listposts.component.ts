@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ContentService } from '../../services/content.service';
-import { MatTabChangeEvent } from '@angular/material';
 import { ContentEntity } from '../../entity/content.entity';
 import { environment } from '../../../environments/environment';
 
@@ -17,14 +16,15 @@ export class ListpostsComponent implements OnInit, OnChanges  {
     private contentService: ContentService
   ) { }
 
-  @Input() tabChangeEvent: MatTabChangeEvent;
+  @Input() selectedTabIndex: number;
+  @Output() navToTabIndex = new EventEmitter<number>();
 
   contentList: UserService[] = [];
-  
   public uploadServerURL: string;
-  
+
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['tabChangeEvent'] && this.tabChangeEvent && this.tabChangeEvent.index === 3) {
+    if (changes['selectedTabIndex'] && this.selectedTabIndex && this.selectedTabIndex === 3) {
+      console.log('Tab selected list posts');
       this.fetchData();
     }
   }
@@ -34,6 +34,10 @@ export class ListpostsComponent implements OnInit, OnChanges  {
     if (this.userService.cachedUser != null) {
       this.fetchData();
     }
+  }
+
+  navToTab(index: number) {
+    this.navToTabIndex.emit(index);
   }
 
   fetchData() {

@@ -8,6 +8,7 @@ import { GoogleSignInSuccess } from 'angular-google-signin';
 import { UserEntity } from '../entity/user.entity';
 import { UserService } from '../services/user.service';
 import { MatTabChangeEvent } from '@angular/material';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,7 @@ export class LoginComponent implements OnInit {
 
   public loggedIn = false;
   public loggedInUser: UserEntity;
-  public tabChangeEvent: MatTabChangeEvent;
+  public selectedTab = new FormControl(0);
 
   constructor(
     private userService: UserService,
@@ -36,7 +37,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSelectedTabChange(event: MatTabChangeEvent) {
-    this.tabChangeEvent = event;
+    this.selectedTab.setValue(event.index);
+  }
+
+  onNavToTabRequest(event) {
+    this.selectedTab.setValue(event);
   }
 
   onGoogleSignInSuccess(event: GoogleSignInSuccess) {
