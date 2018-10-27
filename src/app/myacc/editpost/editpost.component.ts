@@ -31,6 +31,10 @@ export class EditpostComponent implements OnInit, OnChanges {
       if (this.imageList.length !== this.fileUploadService.imageListCache.length) {
         this.imageList = this.fileUploadService.imageListCache;
       }
+
+      if (this.contentService.editObject.id !== undefined) {
+        this.model = this.contentService.editObject;
+      }
     }
   }
 

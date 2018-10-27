@@ -36,8 +36,9 @@ export class ListpostsComponent implements OnInit, OnChanges  {
     }
   }
 
-  navToTab(index: number) {
-    this.navToTabIndex.emit(index);
+  onEditLink(editObject: ContentEntity) {
+    this.contentService.editObject = editObject;
+    this.navToTabIndex.emit(2);
   }
 
   fetchData() {

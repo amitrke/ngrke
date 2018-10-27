@@ -12,6 +12,7 @@ import { environment } from '../../environments/environment';
 export class ContentService {
 
   private serviceURL = environment.serviceURL + 'articles/';
+  public editObject = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
 
   constructor(private http: HttpClient) {
   }
