@@ -52,6 +52,7 @@ import { ListpicsComponent } from './myacc/listpics/listpics.component';
 import { ListpostsComponent } from './myacc/listposts/listposts.component';
 import { EditpostComponent } from './myacc/editpost/editpost.component';
 import { SplitAndGetPipe } from './pipes/splitandget';
+import { WthrwdgitComponent } from './wthrwdgit/wthrwdgit.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { SplitAndGetPipe } from './pipes/splitandget';
     EditpostComponent,
     ListpicsComponent,
     ListpostsComponent,
-    SplitAndGetPipe
+    SplitAndGetPipe,
+    WthrwdgitComponent
   ],
   imports: [
     BrowserModule,

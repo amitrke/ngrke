@@ -2,3 +2,14 @@
     max-width: 300px;
     float: left;
 }
+
+.toolbar-fill-remaining-space {
+    flex: 1 1 auto;
+}
+.toolbar-space {
+    width: 1 1 auto;
+}
+
+mat-toolbar {
+    height: 24px;
+}
