@@ -22,8 +22,17 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.contentService.list().subscribe(data => {
+    const searchCriteria = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
+    searchCriteria.status = 'published-to-homepage';
+    this.contentService.search(searchCriteria).subscribe(data => {
       this.contentList = data;
+      this.contentList.sort((obj1, obj2) => {
+        if (obj1.priority < obj2.priority) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
     }, error => {
         this.error = true;
         console.error(error);
