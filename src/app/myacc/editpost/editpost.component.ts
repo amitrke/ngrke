@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, DoCheck, Input, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, DoCheck, Input, SimpleChange, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FileuploadService } from '../../services/fileupload.service';
 import { UserService } from '../../services/user.service';
 import { ContentEntity } from '../../entity/content.entity';
@@ -15,6 +15,7 @@ export class EditpostComponent implements OnInit, OnChanges {
   public imageList: string[] = [];
 
   @Input() selectedTabIndex: number;
+  @Output() navToTabIndex = new EventEmitter<number>();
 
   constructor(
     private fileUploadService: FileuploadService,
@@ -34,6 +35,7 @@ export class EditpostComponent implements OnInit, OnChanges {
 
       if (this.contentService.editObject.id !== undefined) {
         this.model = this.contentService.editObject;
+        this.contentService.editObject = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
       }
     }
   }
@@ -51,6 +53,7 @@ export class EditpostComponent implements OnInit, OnChanges {
       this.snackBar.open('Content uploaded', undefined, {
         duration: 2000,
       });
+      this.navToTabIndex.emit(3);
     },
     error => {
       console.log(error);

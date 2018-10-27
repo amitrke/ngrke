@@ -15,7 +15,7 @@
         <div *ngIf="!loggedIn">Please login to use this feature</div>
       </mat-tab>
       <mat-tab label="Submit a Content">
-        <app-editpost [hidden]="!loggedIn" [selectedTabIndex]="selectedTab.value"></app-editpost>
+        <app-editpost [hidden]="!loggedIn" (navToTabIndex)="onNavToTabRequest($event)" [selectedTabIndex]="selectedTab.value"></app-editpost>
         <div [hidden]="loggedIn">Please login to use this feature</div>
       </mat-tab>
       <mat-tab label="Manage my Content">
