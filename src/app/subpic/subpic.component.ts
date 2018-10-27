@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { FileuploadService } from '../services/fileupload.service';
 import { UserService } from '../services/user.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-subpic',
@@ -13,9 +14,11 @@ export class SubpicComponent implements OnInit {
 
   constructor(
     private fileUploadService: FileuploadService,
-    private userService: UserService
+    private userService: UserService,
+    public snackBar: MatSnackBar
   ) { }
 
+  @Output() navToTabIndex = new EventEmitter<number>();
   fileToUpload: File = null;
   firstFormGroup: FormGroup;
   fileUploaded = false;
@@ -53,7 +56,10 @@ export class SubpicComponent implements OnInit {
       (err) => {
         console.log('Upload Error:', err);
       }, () => {
-        console.log('Upload done');
+        this.snackBar.open('Image uploaded', undefined, {
+          duration: 2000,
+        });
+        this.navToTabIndex.emit(1);
       }
     );
   }

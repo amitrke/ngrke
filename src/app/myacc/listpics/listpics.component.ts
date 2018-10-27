@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { FileuploadService } from '../../services/fileupload.service';
 import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
@@ -8,10 +8,13 @@ import { environment } from '../../../environments/environment';
   templateUrl: './listpics.component.html',
   styleUrls: ['./listpics.component.scss']
 })
-export class ListpicsComponent implements OnInit {
+export class ListpicsComponent implements OnInit, OnChanges {
 
   public imageList: string[];
   public uploadServerURL: string;
+
+  @Input() selectedTabIndex: number;
+  @Output() navToTabIndex = new EventEmitter<number>();
 
   constructor(
     private fileUploadService: FileuploadService,
@@ -19,10 +22,14 @@ export class ListpicsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.fileUploadService.imageListCache.length === 0) {
+    this.uploadServerURL = environment.uploadServerURL;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedTabIndex'] && this.selectedTabIndex && this.selectedTabIndex === 1) {
+      console.log('Tab selected list pics');
       this.updateFilesList();
     }
-    this.uploadServerURL = environment.uploadServerURL;
   }
 
   updateFilesList() {
