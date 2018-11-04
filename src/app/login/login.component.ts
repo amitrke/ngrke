@@ -4,11 +4,11 @@ import { Component,
   OnInit,
   ChangeDetectorRef
  } from '@angular/core';
-import { GoogleSignInSuccess } from 'angular-google-signin';
 import { UserEntity } from '../entity/user.entity';
 import { UserService } from '../services/user.service';
 import { MatTabChangeEvent } from '@angular/material';
 import { FormControl } from '@angular/forms';
+import { GoogleSignInSuccess } from '../google-signin/google-signin.component';
 
 @Component({
   selector: 'app-login',

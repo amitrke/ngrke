@@ -44,7 +44,6 @@ import {ContentService} from './services/content.service';
 import { HttpClientModule } from '@angular/common/http';
 import {CdkTableModule} from '@angular/cdk/table';
 import { LoginComponent } from './login/login.component';
-import { GoogleSignInComponent } from 'angular-google-signin';
 import { UserService } from './services/user.service';
 import { FileuploadService } from './services/fileupload.service';
 import { SubpicComponent } from './subpic/subpic.component';
@@ -54,6 +53,7 @@ import { EditpostComponent } from './myacc/editpost/editpost.component';
 import { SplitAndGetPipe } from './pipes/splitandget';
 import { WthrwdgitComponent } from './wthrwdgit/wthrwdgit.component';
 import { PhotoglryComponent } from './photoglry/photoglry.component';
+import { GoogleSigninComponent } from './google-signin/google-signin.component';
 
 @NgModule({
   declarations: [
@@ -61,14 +61,14 @@ import { PhotoglryComponent } from './photoglry/photoglry.component';
     CmsPageComponent,
     HomeComponent,
     LoginComponent,
-    GoogleSignInComponent,
     SubpicComponent,
     EditpostComponent,
     ListpicsComponent,
     ListpostsComponent,
     SplitAndGetPipe,
     WthrwdgitComponent,
-    PhotoglryComponent
+    PhotoglryComponent,
+    GoogleSigninComponent
   ],
   imports: [
     BrowserModule,

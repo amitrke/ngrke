@@ -27,12 +27,12 @@
   <hr>
 Logout
 <ng-template #preLoginContent>
-  <google-signin
+  <app-google-signin
     [clientId]="myClientId"
     [width]="myWidth"
     [theme]="myTheme"
     [scope]="myScope"
     [longTitle]="myLongTitle"
     (googleSignInSuccess)="onGoogleSignInSuccess($event)">
-  </google-signin>
+  </app-google-signin>
 </ng-template>
