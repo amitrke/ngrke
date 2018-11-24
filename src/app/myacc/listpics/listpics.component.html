@@ -1,11 +1,11 @@
 <mat-card *ngFor="let item of fileUploadService.imageListCache" class="home-card">
-  <mat-card-title>{{item | splitAndGet:"/":3}}</mat-card-title>
+  <mat-card-title>{{item | splitAndGet:"/":3 | truncEllipsis:14}}</mat-card-title>
   <img mat-card-image src="{{uploadServerURL}}/{{item}}">
   <mat-card-actions>
     <button mat-icon-button (click)="onDelete(item)">
       <mat-icon>delete</mat-icon> 
     </button>
     <mat-icon>edit</mat-icon>
-    <mat-icon>open_in_new</mat-icon>
+    <mat-slide-toggle>Gallery</mat-slide-toggle>
   </mat-card-actions>
 </mat-card>

@@ -54,6 +54,7 @@ import { SplitAndGetPipe } from './pipes/splitandget';
 import { WthrwdgitComponent } from './wthrwdgit/wthrwdgit.component';
 import { PhotoglryComponent } from './photoglry/photoglry.component';
 import { GoogleSigninComponent } from './google-signin/google-signin.component';
+import { TruncateAndEllipsis } from './pipes/truncelli';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { GoogleSigninComponent } from './google-signin/google-signin.component';
     ListpicsComponent,
     ListpostsComponent,
     SplitAndGetPipe,
+    TruncateAndEllipsis,
     WthrwdgitComponent,
     PhotoglryComponent,
     GoogleSigninComponent
