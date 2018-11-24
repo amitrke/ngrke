@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
       profile.getImageUrl(),
       'User'
     );
-    this.userService.create(user).subscribe(value => {
+    this.userService.save(user).subscribe(value => {
       if (value) {
         console.log('Registration complete');
         this.setLoggedInUserFlags(user);
