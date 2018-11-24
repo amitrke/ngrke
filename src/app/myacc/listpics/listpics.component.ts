@@ -66,9 +66,11 @@ export class ListpicsComponent implements OnInit, OnChanges {
   }
 
   isGlry(imageURL: string) {
-    for (const element of this.galleryList) {
-      if (element.imageURL === imageURL) {
-        return true;
+    if (this.galleryList != null ) {
+      for (const element of this.galleryList) {
+        if (element.imageURL === imageURL) {
+          return true;
+        }
       }
     }
   }
