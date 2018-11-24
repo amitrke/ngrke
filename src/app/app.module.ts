@@ -55,6 +55,7 @@ import { WthrwdgitComponent } from './wthrwdgit/wthrwdgit.component';
 import { PhotoglryComponent } from './photoglry/photoglry.component';
 import { GoogleSigninComponent } from './google-signin/google-signin.component';
 import { TruncateAndEllipsis } from './pipes/truncelli';
+import { PhotogalleryService } from './services/photogallery.service';
 
 @NgModule({
   declarations: [
@@ -111,7 +112,7 @@ import { TruncateAndEllipsis } from './pipes/truncelli';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [ContentService, UserService, FileuploadService],
+  providers: [ContentService, UserService, FileuploadService, PhotogalleryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

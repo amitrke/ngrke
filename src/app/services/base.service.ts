@@ -31,6 +31,12 @@ export class BaseService<T extends BaseEntity> {
         return this.doPost(this.serviceURL, entity);
     }
 
+    public delete(id: string): Observable<any> {
+        return this.http.delete(this.serviceURL + id).pipe(
+            catchError(this.handleError)
+          );
+    }
+
     private doGet(url: string): Observable<any> {
         return this.http.get(url)
             .pipe(

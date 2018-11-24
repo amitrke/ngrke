@@ -6,6 +6,10 @@
       <mat-icon>delete</mat-icon> 
     </button>
     <mat-icon>edit</mat-icon>
-    <mat-slide-toggle>Gallery</mat-slide-toggle>
+    <mat-slide-toggle
+      [id]=item
+      [checked]="isGlry(item)"
+      (change)="onGlryChange($event)"
+      >Gallery</mat-slide-toggle>
   </mat-card-actions>
 </mat-card>
