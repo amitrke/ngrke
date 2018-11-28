@@ -21,7 +21,7 @@
                 <mat-icon>help</mat-icon>
                 <span>Help</span>
             </button>
-            <button mat-menu-item *ngIf="userService.cachedUser">
+            <button mat-menu-item *ngIf="userService.cachedUser" routerLink="/logout">
                 <mat-icon>exit_to_app</mat-icon>
                 <span>Logout</span>
             </button>
