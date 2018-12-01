@@ -4,6 +4,7 @@
 .toolbar-space {
     width: 1 1 auto;
 }
+
 main {
     padding: 5px;
     min-height: 70%;
@@ -11,8 +12,21 @@ main {
     min-height: -moz-calc(100% - 128px);
     min-height: calc(100% - 128px);
 }
-.website-name{
-    padding-left: 5px;
-    text-decoration : none;
-    color : white;
+
+header {
+
+    .website-name {
+        padding-left: 5px;
+        text-decoration : none;
+        color : white;
+    }
+
+}
+
+footer {
+    a {
+        padding-left: 5px;
+        text-decoration : none;
+        color : white;
+    }
 }

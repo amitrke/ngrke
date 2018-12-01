@@ -6,11 +6,13 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { PhotoglryComponent } from './photoglry/photoglry.component';
 import { LogoutComponent } from './myacc/logout/logout.component';
+import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 
 const routes: Routes = [
   { path: 'page/:id', component: CmsPageComponent },
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent},
+  { path: 'disclaimer', component: DisclaimerComponent},
   { path: 'logout', component: LogoutComponent},
   { path: 'photos', component: PhotoglryComponent},
   { path: '', redirectTo: '/home', pathMatch: 'full' }

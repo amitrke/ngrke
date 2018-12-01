@@ -57,6 +57,7 @@ import { GoogleSigninComponent } from './google-signin/google-signin.component';
 import { TruncateAndEllipsis } from './pipes/truncelli';
 import { PhotogalleryService } from './services/photogallery.service';
 import { LogoutComponent } from './myacc/logout/logout.component';
+import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { LogoutComponent } from './myacc/logout/logout.component';
     WthrwdgitComponent,
     PhotoglryComponent,
     GoogleSigninComponent,
-    LogoutComponent
+    LogoutComponent,
+    DisclaimerComponent
   ],
   imports: [
     BrowserModule,
