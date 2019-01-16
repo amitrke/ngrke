@@ -17,7 +17,7 @@ export class ContactusComponent implements OnInit {
     private userService: UserService,
   ) { }
 
-  model = new MailEntity(undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', 'Not Implemented', undefined);
+  model = new MailEntity(undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', undefined, undefined);
 
   ngOnInit() {
   }
@@ -36,7 +36,7 @@ export class ContactusComponent implements OnInit {
         duration: 4000,
       });
       this.model = new MailEntity(
-        undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', 'Not Implemented', undefined);
+        undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', undefined, undefined);
     },
     error => {
       console.log(error);
@@ -44,15 +44,15 @@ export class ContactusComponent implements OnInit {
         duration: 6000,
       });
       this.model = new MailEntity(
-        undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', 'Not Implemented', undefined);
+        undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', undefined, undefined);
     });
   }
 
   createMailBody() {
     let content = '<h3>Contact Us communication sent from roorkee.org</h3>';
     content += '<img src=\'' + this.userService.cachedUser.imageURL + '\'>';
-    content += 'From:' + this.userService.cachedUser.name + '(' + this.userService.cachedUser.email + ')';
-    content += '<p>' + this.model.htmlBody + '</p>';
+    content += '<p>From:' + this.userService.cachedUser.name + '(' + this.userService.cachedUser.email + ')</p>';
+    content += '<p>' + this.model.textBody + '</p>';
     content += '<p>Local time:' + new Date() + '</p>';
     return content;
   }
