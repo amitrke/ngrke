@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MailEntity } from '../entity/mail.entity';
 import { MailService } from '../services/mail.service';
 import { MatSnackBar } from '@angular/material';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-contactus',
@@ -12,22 +13,47 @@ export class ContactusComponent implements OnInit {
 
   constructor(
     private mailService: MailService,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    private userService: UserService,
   ) { }
 
-  model = new MailEntity('admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', 'Not Implemented', undefined);
+  model = new MailEntity(undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', 'Not Implemented', undefined);
 
   ngOnInit() {
   }
 
   onSubmit() {
-    this.mailService.sendEmail(this.model, 'NotImplemented').subscribe(data => {
-      this.snackBar.open('Communication sent', undefined, {
-        duration: 2000,
+    if (this.userService.cachedUser == null) {
+      this.snackBar.open('You must be logged in to send communication', undefined, {
+        duration: 4000,
       });
+      return;
+    }
+    this.model.fromUserId = this.userService.cachedUser.id;
+    this.model.htmlBody = this.createMailBody();
+    this.mailService.sendEmail(this.model).subscribe(data => {
+      this.snackBar.open('Communication sent', undefined, {
+        duration: 4000,
+      });
+      this.model = new MailEntity(
+        undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', 'Not Implemented', undefined);
     },
     error => {
       console.log(error);
+      this.snackBar.open(error.error.message, undefined, {
+        duration: 6000,
+      });
+      this.model = new MailEntity(
+        undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', 'Not Implemented', undefined);
     });
+  }
+
+  createMailBody() {
+    let content = '<h3>Contact Us communication sent from roorkee.org</h3>';
+    content += '<img src=\'' + this.userService.cachedUser.imageURL + '\'>';
+    content += 'From:' + this.userService.cachedUser.name + '(' + this.userService.cachedUser.email + ')';
+    content += '<p>' + this.model.htmlBody + '</p>';
+    content += '<p>Local time:' + new Date() + '</p>';
+    return content;
   }
 }

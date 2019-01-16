@@ -12,7 +12,7 @@ export class MailService {
   private serviceURL = environment.serviceURL + 'mail/';
   constructor(private http: HttpClient) { }
 
-  sendEmail(mail: MailEntity, userId: string): Observable<any> {
-    return this.http.post(this.serviceURL + 'out/', mail, { headers: {'userId': userId}});
+  sendEmail(mail: MailEntity): Observable<any> {
+    return this.http.post(this.serviceURL + 'out/', mail);
   }
 }
