@@ -1,0 +1,6 @@
+<form #postForm="ngForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <textarea matInput id="message" required [(ngModel)]="model.htmlBody" name="message" placeholder="Type your message here"></textarea>
+    </mat-form-field>
+    <button mat-button [disabled]="!postForm.form.valid">Submit</button>
+</form>

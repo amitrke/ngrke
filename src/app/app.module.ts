@@ -58,6 +58,7 @@ import { TruncateAndEllipsis } from './pipes/truncelli';
 import { PhotogalleryService } from './services/photogallery.service';
 import { LogoutComponent } from './myacc/logout/logout.component';
 import { DisclaimerComponent } from './disclaimer/disclaimer.component';
+import { ContactusComponent } from './contactus/contactus.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { DisclaimerComponent } from './disclaimer/disclaimer.component';
     PhotoglryComponent,
     GoogleSigninComponent,
     LogoutComponent,
-    DisclaimerComponent
+    DisclaimerComponent,
+    ContactusComponent
   ],
   imports: [
     BrowserModule,

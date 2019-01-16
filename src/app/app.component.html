@@ -13,7 +13,7 @@
                 <mat-icon>photo_album</mat-icon>
                 <span>Photo Album</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item *ngIf="userService.cachedUser" routerLink="/contactus">
                 <mat-icon>contact_support</mat-icon>
                 <span>Contact Us</span>
             </button>
