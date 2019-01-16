@@ -1,9 +1,9 @@
-import { Component, OnInit, OnChanges, DoCheck, Input, SimpleChange, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FileuploadService } from '../../services/fileupload.service';
 import { UserService } from '../../services/user.service';
 import { ContentEntity } from '../../entity/content.entity';
 import { ContentService } from '../../services/content.service';
-import { MatSnackBar, MatTabChangeEvent } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-editpost',
