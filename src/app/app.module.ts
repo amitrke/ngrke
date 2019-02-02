@@ -35,7 +35,8 @@ import {
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MAT_DIALOG_DEFAULT_OPTIONS
 } from '@angular/material';
 import { AppRoutingModule } from './/app-routing.module';
 import { CmsPageComponent } from './cms-page/cms-page.component';
@@ -59,6 +60,7 @@ import { PhotogalleryService } from './services/photogallery.service';
 import { LogoutComponent } from './myacc/logout/logout.component';
 import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 import { ContactusComponent } from './contactus/contactus.component';
+import { CnfdlgComponent } from './cnfdlg/cnfdlg.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +79,8 @@ import { ContactusComponent } from './contactus/contactus.component';
     GoogleSigninComponent,
     LogoutComponent,
     DisclaimerComponent,
-    ContactusComponent
+    ContactusComponent,
+    CnfdlgComponent
   ],
   imports: [
     BrowserModule,
@@ -118,7 +121,11 @@ import { ContactusComponent } from './contactus/contactus.component';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [ContentService, UserService, FileuploadService, PhotogalleryService],
+  providers: [
+    ContentService, UserService, FileuploadService, PhotogalleryService,
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+  ],
+  entryComponents: [CnfdlgComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

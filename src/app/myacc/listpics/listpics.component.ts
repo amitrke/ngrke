@@ -4,7 +4,8 @@ import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
 import { PhotogalleryService } from '../../services/photogallery.service';
 import { PhotogalleryEntity } from '../../entity/photogallery.entity';
-import { MatSlideToggleChange, MatSnackBar } from '@angular/material';
+import { MatSlideToggleChange, MatSnackBar, MatDialog } from '@angular/material';
+import { CnfdlgComponent } from '../../cnfdlg/cnfdlg.component';
 
 @Component({
   selector: 'app-listpics',
@@ -17,6 +18,9 @@ export class ListpicsComponent implements OnInit, OnChanges {
   public uploadServerURL: string;
   public galleryList: PhotogalleryEntity[];
 
+  animal: string;
+  name: string;
+
   @Input() selectedTabIndex: number;
   @Output() navToTabIndex = new EventEmitter<number>();
 
@@ -24,7 +28,8 @@ export class ListpicsComponent implements OnInit, OnChanges {
     private fileUploadService: FileuploadService,
     private photogalleryService: PhotogalleryService,
     private userService: UserService,
-    public snackBar: MatSnackBar
+    public snackBar: MatSnackBar,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -114,10 +119,25 @@ export class ListpicsComponent implements OnInit, OnChanges {
   }
 
   onDelete(fileName: string) {
-    this.fileUploadService.delete(fileName).subscribe(data => {
-      this.updateFilesList();
-    }, error => {
-      console.log(error);
+
+    this.name = this.userService.cachedUser.name;
+    this.animal = 'you want to delete this file';
+
+    const dialogRef = this.dialog.open(CnfdlgComponent, {
+      width: '250px',
+      data: {name: this.name, animal: this.animal}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed' + result);
+      this.animal = result;
+      if (result === 'yes') {
+        this.fileUploadService.delete(fileName).subscribe(data => {
+          this.updateFilesList();
+        }, error => {
+          console.log(error);
+        });
+      }
     });
   }
 }
