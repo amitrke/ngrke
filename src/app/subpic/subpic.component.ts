@@ -55,6 +55,9 @@ export class SubpicComponent implements OnInit {
       },
       (err) => {
         console.log('Upload Error:', err);
+        this.snackBar.open(err.error.message, undefined, {
+          duration: 2000,
+        });
       }, () => {
         this.snackBar.open('Image uploaded', undefined, {
           duration: 2000,
