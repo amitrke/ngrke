@@ -48,9 +48,14 @@ export class LoginComponent implements OnInit {
     const googleUser: gapi.auth2.GoogleUser = event.googleUser;
     const id: string = googleUser.getId();
     const profile: gapi.auth2.BasicProfile = googleUser.getBasicProfile();
-
+    this.userService.accessToken = googleUser.getAuthResponse().access_token;
+    console.log('auth response:' + JSON.stringify(googleUser.getAuthResponse()));
     const user: UserEntity = new UserEntity(profile.getId(), undefined, undefined, undefined, undefined);
-
+    this.userService.tokensignin(googleUser.getAuthResponse().id_token).subscribe(value=>{
+      console.log('Success token stuff');
+    }, error => {
+      console.log('Error token stuff');
+    });
     this.userService.search(user).subscribe(value => {
         if (value.length > 0) {
           this.setLoggedInUserFlags(value[0]);
