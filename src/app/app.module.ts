@@ -61,6 +61,7 @@ import { LogoutComponent } from './myacc/logout/logout.component';
 import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 import { ContactusComponent } from './contactus/contactus.component';
 import { CnfdlgComponent } from './cnfdlg/cnfdlg.component';
+import { PrivacyComponent } from './privacy/privacy.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { CnfdlgComponent } from './cnfdlg/cnfdlg.component';
     LogoutComponent,
     DisclaimerComponent,
     ContactusComponent,
-    CnfdlgComponent
+    CnfdlgComponent,
+    PrivacyComponent
   ],
   imports: [
     BrowserModule,
