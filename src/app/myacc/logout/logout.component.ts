@@ -13,8 +13,8 @@ export class LogoutComponent implements AfterViewInit {
   public status: boolean;
 
   ngAfterViewInit() {
-    if (this.userService.cachedUser !== undefined) {
-      this.userService.cachedUser = undefined;
+    if (this.userService.getCachedUser('idtoken') !== undefined) {
+      this.userService.removeCachedUser();
       gapi.auth2.getAuthInstance().signOut();
       this.status = true;
     } else {

@@ -6,6 +6,7 @@ import { PhotogalleryService } from '../../services/photogallery.service';
 import { PhotogalleryEntity } from '../../entity/photogallery.entity';
 import { MatSlideToggleChange, MatSnackBar, MatDialog } from '@angular/material';
 import { CnfdlgComponent } from '../../cnfdlg/cnfdlg.component';
+import { UserEntity } from '../../entity/user.entity';
 
 @Component({
   selector: 'app-listpics',
@@ -47,8 +48,9 @@ export class ListpicsComponent implements OnInit, OnChanges {
   }
 
   updateFilesList() {
-    if (this.userService.cachedUser != null) {
-      const folder = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id;
+    const user: UserEntity = this.userService.getCachedUser('user');
+    if (user != null) {
+      const folder = this.fileUploadService.uploadBaseFolder + user.id;
       this.fileUploadService.listFiles(folder).subscribe(data => {
         this.imageList = data;
         this.fileUploadService.imageListCache = data;
@@ -62,7 +64,8 @@ export class ListpicsComponent implements OnInit, OnChanges {
 
   updatePhotogalleryList() {
     const searchCriteria = new PhotogalleryEntity(undefined);
-      searchCriteria.userId = this.userService.cachedUser.id;
+    const user: UserEntity = this.userService.getCachedUser('user');
+      searchCriteria.userId = user.id;
       this.photogalleryService.search(searchCriteria).subscribe(data => {
         this.galleryList = data;
       }, error => {
@@ -84,7 +87,8 @@ export class ListpicsComponent implements OnInit, OnChanges {
     console.log('Gallery change ' + event.checked + ', Source=' + event.source.id);
     if (event.checked) { // Add to gallery
       const glry = new PhotogalleryEntity(event.source.id);
-      glry.userId = this.userService.cachedUser.id;
+      const user: UserEntity = this.userService.getCachedUser('user');
+      glry.userId = user.id;
       this.photogalleryService.save(glry).subscribe(data => {
         this.updatePhotogalleryList();
         this.snackBar.open('Added to photogallery', undefined, {
@@ -119,8 +123,8 @@ export class ListpicsComponent implements OnInit, OnChanges {
   }
 
   onDelete(fileName: string) {
-
-    this.name = this.userService.cachedUser.name;
+    const user: UserEntity = this.userService.getCachedUser('user');
+    this.name = user.name;
     this.animal = 'you want to delete this file';
 
     const dialogRef = this.dialog.open(CnfdlgComponent, {

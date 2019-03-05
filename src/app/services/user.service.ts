@@ -9,15 +9,19 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
 
-  constructor(
-    private httpClient: HttpClient
-    ) {
-      super(httpClient, 'users');
-     }
+  constructor(private httpClient: HttpClient) {
+    super(httpClient, 'users');
+  }
 
-  public cachedUser: UserEntity;
+  public setCachedUser(idtoken: string, user: UserEntity) {
+    localStorage.setItem('idtoken', idtoken);
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('expiry', JSON.stringify(new Date().getTime()));
+  }
 
-  public accessToken: string;
+  public removeCachedUser() {
+    localStorage.clear();
+  }
 
   public tokensignin(idtoken: string): Observable<any> {
     return this.httpClient.get(

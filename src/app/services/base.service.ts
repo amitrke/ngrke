@@ -38,14 +38,18 @@ export class BaseService<T extends BaseEntity> {
     }
 
     private doGet(url: string): Observable<any> {
-        return this.http.get(url)
+        let idtoken = this.getCachedUser('idtoken');
+        idtoken = idtoken != null ? idtoken : '';
+        return this.http.get(url, { headers: {'idtoken': idtoken}})
             .pipe(
               catchError(this.handleError)
             );
     }
 
     private doPost(url: string, entity: T): Observable<any> {
-        return this.http.post(url, entity).pipe(
+        let idtoken = this.getCachedUser('idtoken');
+        idtoken = idtoken != null ? idtoken : '';
+        return this.http.post(url, entity, { headers: {'idtoken': idtoken}}).pipe(
             catchError(this.handleError)
         );
     }
@@ -63,5 +67,20 @@ export class BaseService<T extends BaseEntity> {
         }
         // return an ErrorObservable with a user-facing error message
         return new ErrorObservable();
+      }
+
+      public getCachedUser(attribute: string): any {
+        if (localStorage.length > 0 && localStorage.getItem('expiry') != null) {
+          const expiry: number = Number.parseInt(localStorage.getItem('expiry'));
+          const now = new Date().getTime();
+          if ((now - expiry) < 3600000 && localStorage.getItem(attribute) != null) {
+            try {
+              return JSON.parse(localStorage.getItem(attribute));
+            } catch (e) {
+              return localStorage.getItem(attribute);
+            }
+          }
+        }
+        return null;
       }
 }

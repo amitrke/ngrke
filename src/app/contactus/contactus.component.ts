@@ -3,6 +3,7 @@ import { MailEntity } from '../entity/mail.entity';
 import { MailService } from '../services/mail.service';
 import { MatSnackBar } from '@angular/material';
 import { UserService } from '../services/user.service';
+import { UserEntity } from '../entity/user.entity';
 
 @Component({
   selector: 'app-contactus',
@@ -23,13 +24,14 @@ export class ContactusComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.userService.cachedUser == null) {
+    const user: UserEntity = this.userService.getCachedUser('user');
+    if (user == null) {
       this.snackBar.open('You must be logged in to send communication', undefined, {
         duration: 4000,
       });
       return;
     }
-    this.model.fromUserId = this.userService.cachedUser.id;
+    this.model.fromUserId = user.id;
     this.model.htmlBody = this.createMailBody();
     this.mailService.sendEmail(this.model).subscribe(data => {
       this.snackBar.open('Communication sent', undefined, {
@@ -49,9 +51,10 @@ export class ContactusComponent implements OnInit {
   }
 
   createMailBody() {
+    const user: UserEntity = this.userService.getCachedUser('user');
     let content = '<h3>Contact Us communication sent from roorkee.org</h3>';
-    content += '<img src=\'' + this.userService.cachedUser.imageURL + '\'>';
-    content += '<p>From:' + this.userService.cachedUser.name + '(' + this.userService.cachedUser.email + ')</p>';
+    content += '<img src=\'' + user.imageURL + '\'>';
+    content += '<p>From:' + user.name + '(' + user.email + ')</p>';
     content += '<p>' + this.model.textBody + '</p>';
     content += '<p>Local time:' + new Date() + '</p>';
     return content;
