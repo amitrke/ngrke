@@ -15,6 +15,6 @@ export class ContentService extends BaseService<ContentEntity> {
   }
 
   public homepage(): Observable<any> {
-    return this.doGet(environment.uploadServerURL + '/cache/home.json');
+    return this.doGet('https://storage.googleapis.com/up.roorkee.org/cache/home.json');
   }
 }
