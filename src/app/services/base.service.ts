@@ -4,10 +4,12 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BaseEntity } from '../entity/base.entity';
+import { UserEntity } from '../entity/user.entity';
 
 export class BaseService<T extends BaseEntity> {
 
     private serviceURL: string;
+    public cachedUser: UserEntity;
 
     constructor(
         private http: HttpClient,
@@ -75,7 +77,11 @@ export class BaseService<T extends BaseEntity> {
           const now = new Date().getTime();
           if ((now - expiry) < 3600000 && localStorage.getItem(attribute) != null) {
             try {
-              return JSON.parse(localStorage.getItem(attribute));
+              const obj = JSON.parse(localStorage.getItem(attribute));
+              if (attribute === 'user') {
+                this.cachedUser = obj;
+              }
+              return obj;
             } catch (e) {
               return localStorage.getItem(attribute);
             }

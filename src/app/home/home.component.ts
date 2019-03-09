@@ -4,6 +4,7 @@ import { ContentService } from '../services/content.service';
 import { ContentEntity } from '../entity/content.entity';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../environments/environment';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -18,10 +19,15 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private contentService: ContentService
+    private contentService: ContentService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
+    if (this.userService.getCachedUser('idtoken') != null) {
+      this.userService.getCachedUser('user');
+    }
+
     const searchCriteria = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
     searchCriteria.status = 'published-to-homepage';
     this.contentService.search(searchCriteria).subscribe(data => {

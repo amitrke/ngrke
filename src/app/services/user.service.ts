@@ -17,6 +17,7 @@ export class UserService extends BaseService<UserEntity> {
     localStorage.setItem('idtoken', idtoken);
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('expiry', JSON.stringify(new Date().getTime()));
+    this.cachedUser = user;
   }
 
   public removeCachedUser() {
