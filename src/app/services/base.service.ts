@@ -37,7 +37,7 @@ export class BaseService<T extends BaseEntity> {
           );
     }
 
-    private doGet(url: string): Observable<any> {
+    protected doGet(url: string): Observable<any> {
         let idtoken = this.getCachedUser('idtoken');
         idtoken = idtoken != null ? idtoken : '';
         return this.http.get(url, { headers: {'idtoken': idtoken}})
@@ -46,7 +46,7 @@ export class BaseService<T extends BaseEntity> {
             );
     }
 
-    private doPost(url: string, entity: T): Observable<any> {
+    protected doPost(url: string, entity: T): Observable<any> {
         let idtoken = this.getCachedUser('idtoken');
         idtoken = idtoken != null ? idtoken : '';
         return this.http.post(url, entity, { headers: {'idtoken': idtoken}}).pipe(
