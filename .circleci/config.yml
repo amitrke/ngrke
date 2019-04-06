@@ -62,6 +62,7 @@ jobs:
     working_directory: ~/ngrke
     steps:
       - checkout
+      - node/install
       - node/install-npm
       - restore_cache:
           keys:
