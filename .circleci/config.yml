@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   gcp-cli: circleci/gcp-cli@1.0.0
   aws-s3: circleci/aws-s3@1.0.4
+  node: circleci/node@1.0.1
 
 jobs:
   build:
@@ -11,7 +12,6 @@ jobs:
     working_directory: ~/ngrke
     steps:
       - checkout
-      - run: chmod -R 777 ~/ngrke
       - restore_cache:
           keys:
           - ngrke-build-{{ checksum "package.json" }}
@@ -29,7 +29,6 @@ jobs:
     working_directory: ~/ngrke
     steps:
       - checkout
-      - run: chmod -R 777 ~/ngrke
       - restore_cache:
           keys:
           - ngrke-gcp-{{ checksum "package.json" }}
@@ -59,11 +58,12 @@ jobs:
   
   deploy_to_aws_dev:
     docker:
-      - image: 'circleci/node:10.13'
+      - image: 'circleci/python:2.7'
     working_directory: ~/ngrke
     steps:
       - checkout
-      - run: chmod -R 777 ~/ngrke
+      - node/install
+      - node/install-yarn
       - restore_cache:
           keys:
           - ngrke-aws-{{ checksum "package.json" }}
@@ -83,10 +83,12 @@ jobs:
             --cache-control "max-age=86400"
           overwrite: true
 workflows:
-  version: 2
   google-master:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: master
       - deploy_to_googlecloud:
           filters:
             branches:
@@ -95,7 +97,10 @@ workflows:
             - build
   aws-develop:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: develop
       - deploy_to_aws_dev:
           filters:
             branches:
