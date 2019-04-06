@@ -5,7 +5,7 @@
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Famitrke%2Fngrke.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Famitrke%2Fngrke?ref=badge_shield)
 
 
-Google cloud hosted URL [http://static.roorkee.org](http://static.roorkee.org)
+Google cloud hosted URL [http://www.roorkee.org](http://www.roorkee.org)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.6.
 
@@ -28,7 +28,3 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ## Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
