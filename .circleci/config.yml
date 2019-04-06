@@ -62,8 +62,8 @@ jobs:
     working_directory: ~/ngrke
     steps:
       - checkout
-      - node/install
-      - node/install-yarn
+      - node/install-npm
+        with-cache: ngrke-aws-{{ checksum "package.json" }}
       - restore_cache:
           keys:
           - ngrke-aws-{{ checksum "package.json" }}
