@@ -14,13 +14,13 @@ jobs:
       - run: chmod -R 777 ~/ngrke
       - restore_cache:
           keys:
-          - ngrke-{{ checksum "package.json" }}
-          - ngrke-
+          - ngrke-build-{{ checksum "package.json" }}
+          - ngrke-build
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: ngrke-{{ checksum "package.json" }}
+          key: ngrke-build{{ checksum "package.json" }}
       - run: yarn build
 
   deploy_to_googlecloud:
@@ -32,13 +32,13 @@ jobs:
       - run: chmod -R 777 ~/ngrke
       - restore_cache:
           keys:
-          - ngrke-{{ checksum "package.json" }}
-          - ngrke-
+          - ngrke-gcp-{{ checksum "package.json" }}
+          - ngrke-gcp
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: ngrke-{{ checksum "package.json" }}
+          key: ngrke-gcp{{ checksum "package.json" }}
       - run: yarn build
       - run:
           name: Dump Google Cloud Credentials to file
@@ -66,13 +66,13 @@ jobs:
       - run: chmod -R 777 ~/ngrke
       - restore_cache:
           keys:
-          - ngrke-{{ checksum "package.json" }}
-          - ngrke-
+          - ngrke-aws-{{ checksum "package.json" }}
+          - ngrke-aws
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: ngrke-{{ checksum "package.json" }}
+          key: ngrke-aws{{ checksum "package.json" }}
       - run: yarn build
       - run: mkdir bucket && echo "lorum ipsum" > bucket/build_asset.txt
       - aws-s3/sync:
