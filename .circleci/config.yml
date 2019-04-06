@@ -1,55 +1,102 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-version: 2
+version: 2.1
+
+orbs:
+  gcp-cli: circleci/gcp-cli@1.0.0
+  aws-s3: circleci/aws-s3@1.0.4
+
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      - image: amitrke/node-appengine:latest
-        env:
-          - DISPLAY=:99
-          - CHROME_BIN=/usr/bin/google-chrome
-
+      - image: 'circleci/node:10.13'
     working_directory: ~/ngrke
-
     steps:
-
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
           - ngrke-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
           - ngrke-
-
       - run: yarn install
-
       - save_cache:
           paths:
             - node_modules
           key: ngrke-{{ checksum "package.json" }}
-      
       - run: yarn build
 
+  deploy_to_googlecloud:
+    docker:
+      - image: amitrke/node-appengine:latest
+    working_directory: ~/ngrke
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - ngrke-{{ checksum "package.json" }}
+          - ngrke-
+      - run: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: ngrke-{{ checksum "package.json" }}
+      - run: yarn build
       - run:
           name: Dump Google Cloud Credentials to file
           command: echo ${GCLOUD_SERVICEACC_STORAGE} > ${HOME}/gcp-key.json
-
       - run:
           name: Active service account
           command: gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
-
       - run:
           name: Set Google cloud project id
           command: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-
       - run:
           name: Deploy to Google Cloud Storage
           command: gsutil -m rsync -d -r dist gs://${GOOGLE_STORAGE_BUCKET}
-
       - run:
           name: Set read access to files
           command: gsutil -m acl ch -r -u AllUsers:R gs://${GOOGLE_STORAGE_BUCKET}/*
+  
+  
+  deploy_to_aws_dev:
+    docker:
+      - image: 'circleci/node:10.13'
+    working_directory: ~/ngrke
+    steps:
+      - checkout
+      - checkout
+      - restore_cache:
+          keys:
+          - ngrke-{{ checksum "package.json" }}
+          - ngrke-
+      - run: yarn install
+      - save_cache:
+          paths:
+            - node_modules
+          key: ngrke-{{ checksum "package.json" }}
+      - run: yarn build
+      - run: mkdir bucket && echo "lorum ipsum" > bucket/build_asset.txt
+      - aws-s3/sync:
+          from: bucket
+          to: 's3://devrke/dev'
+          arguments: |
+            --acl public-read \
+            --cache-control "max-age=86400"
+          overwrite: true
+workflows:
+  version: 2
+  google-master:
+    jobs:
+      - build
+      - deploy_to_googlecloud:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
+  aws-develop:
+    jobs:
+      - build
+      - deploy_to_aws_dev:
+          filters:
+            branches:
+              only: develop
+          requires:
+            - build
