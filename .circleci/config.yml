@@ -2,8 +2,6 @@ version: 2.1
 
 orbs:
   gcp-cli: circleci/gcp-cli@1.0.0
-  aws-s3: circleci/aws-s3@1.0.4
-  node: circleci/node@1.0.1
 
 jobs:
   build:
@@ -14,13 +12,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - ngrke-build-{{ checksum "package.json" }}
+          - ngrke-build-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
           - ngrke-build
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: ngrke-build{{ checksum "package.json" }}
+          key: ngrke-build-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
       - run: yarn build
 
   deploy_to_googlecloud:
@@ -31,13 +29,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - ngrke-gcp-{{ checksum "package.json" }}
+          - ngrke-gcp-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
           - ngrke-gcp
       - run: yarn install
       - save_cache:
           paths:
             - node_modules
-          key: ngrke-gcp{{ checksum "package.json" }}
+          key: ngrke-gcp-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
       - run: yarn build
       - run:
           name: Dump Google Cloud Credentials to file
@@ -58,30 +56,31 @@ jobs:
   
   deploy_to_aws_dev:
     docker:
-      - image: 'circleci/python:2.7'
+      - image: 'circleci/node:10.13'
     working_directory: ~/ngrke
     steps:
+      - run:
+          name: Install aws cli
+          command: sudo apt-get -y -qq install awscli
+      - run:
+          name: Setting Signature Version 4 for S3 Request Authentication
+          command: aws configure set default.s3.signature_version s3v4
       - checkout
-      - node/install
-      - node/install-npm
       - restore_cache:
           keys:
-          - ngrke-aws-{{ checksum "package.json" }}
+          - ngrke-aws-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
           - ngrke-aws
-      - run: yarn install
+      - run: npm install
       - save_cache:
           paths:
             - node_modules
-          key: ngrke-aws{{ checksum "package.json" }}
+          key: ngrke-aws-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
       - run: yarn build
       - run: mkdir bucket && echo "lorum ipsum" > bucket/build_asset.txt
-      - aws-s3/sync:
-          from: bucket
-          to: 's3://devrke/dev'
-          arguments: |
-            --acl public-read \
-            --cache-control "max-age=86400"
-          overwrite: true
+      - run:
+          name: Deploy to S3 dev
+          command: aws --region us-east-1 s3 sync dist s3://rkedev/ --delete
+
 workflows:
   google-master:
     jobs:
