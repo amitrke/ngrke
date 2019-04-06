@@ -11,6 +11,7 @@ jobs:
     working_directory: ~/ngrke
     steps:
       - checkout
+      - run: chmod -R 777 ~/ngrke
       - restore_cache:
           keys:
           - ngrke-{{ checksum "package.json" }}
@@ -28,6 +29,7 @@ jobs:
     working_directory: ~/ngrke
     steps:
       - checkout
+      - run: chmod -R 777 ~/ngrke
       - restore_cache:
           keys:
           - ngrke-{{ checksum "package.json" }}
@@ -61,7 +63,7 @@ jobs:
     working_directory: ~/ngrke
     steps:
       - checkout
-      - checkout
+      - run: chmod -R 777 ~/ngrke
       - restore_cache:
           keys:
           - ngrke-{{ checksum "package.json" }}
