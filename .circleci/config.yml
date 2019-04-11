@@ -79,7 +79,7 @@ jobs:
       - run: mkdir bucket && echo "lorum ipsum" > bucket/build_asset.txt
       - run:
           name: Deploy to S3 dev
-          command: aws --region us-east-1 s3 sync dist s3://devrke/ --delete
+          command: aws --region us-east-1 s3 sync dist s3://www-dev.aws.roorkee.org/ --delete
 
 workflows:
   google-master:
