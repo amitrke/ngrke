@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-wthrwdgit',
