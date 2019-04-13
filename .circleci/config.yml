@@ -81,7 +81,7 @@ jobs:
           name: Deploy to S3 dev
           command: aws --region us-east-1 s3 sync dist s3://www-dev.aws.roorkee.org/ --delete
 
-deploy_to_aws_prod:
+  deploy_to_aws_prod:
     docker:
       - image: 'circleci/node:10.13'
     working_directory: ~/ngrke
