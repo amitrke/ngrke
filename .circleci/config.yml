@@ -81,19 +81,40 @@ jobs:
           name: Deploy to S3 dev
           command: aws --region us-east-1 s3 sync dist s3://www-dev.aws.roorkee.org/ --delete
 
+deploy_to_aws_prod:
+    docker:
+      - image: 'circleci/node:10.13'
+    working_directory: ~/ngrke
+    steps:
+      - run:
+          name: Install aws cli
+          command: sudo apt-get -y -qq install awscli
+      - run:
+          name: Setting Signature Version 4 for S3 Request Authentication
+          command: aws configure set default.s3.signature_version s3v4
+      - checkout
+      - restore_cache:
+          keys:
+          - ngrke-aws-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
+          - ngrke-aws
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: ngrke-aws-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
+      - run: yarn build
+      - run: mkdir bucket && echo "lorum ipsum" > bucket/build_asset.txt
+      - run:
+          name: Deploy to S3 dev
+          command: aws --region us-east-1 s3 sync dist s3://www.aws.roorkee.org/ --delete
+
 workflows:
   google-master:
     jobs:
-      - build:
+      - deploy_to_aws_prod:
           filters:
             branches:
               only: master
-      - deploy_to_googlecloud:
-          filters:
-            branches:
-              only: master
-          requires:
-            - build
   aws-develop:
     jobs:
       - deploy_to_aws_dev:
