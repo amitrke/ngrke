@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ContentService } from '../services/content.service';
 import { ContentEntity } from '../entity/content.entity';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserService } from '../services/user.service';
 
