@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { PhotogalleryService } from '../services/photogallery.service';
+import { environment } from '../../environments/environment';
+import { PhotogalleryEntity } from '../entity/photogallery.entity';
 
 @Component({
   selector: 'app-photoglry',
@@ -7,9 +10,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PhotoglryComponent implements OnInit {
 
-  constructor() { }
+  public uploadServerURL: string;
+  public galleryList: PhotogalleryEntity[];
+
+  constructor(
+    private photogalleryService: PhotogalleryService
+  ) { }
 
   ngOnInit() {
+    this.uploadServerURL = environment.uploadServerURL;
+    this.photogalleryService.list().subscribe(data => {
+      this.galleryList = data;
+    }, error => {
+      console.log(error);
+    });
   }
 
 }

@@ -13,7 +13,7 @@
                 <mat-icon>photo_album</mat-icon>
                 <span>Photo Album</span>
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item *ngIf="userService.cachedUser" routerLink="/contactus">
                 <mat-icon>contact_support</mat-icon>
                 <span>Contact Us</span>
             </button>
@@ -21,7 +21,7 @@
                 <mat-icon>help</mat-icon>
                 <span>Help</span>
             </button>
-            <button mat-menu-item *ngIf="userService.cachedUser">
+            <button mat-menu-item *ngIf="userService.cachedUser" routerLink="/logout">
                 <mat-icon>exit_to_app</mat-icon>
                 <span>Logout</span>
             </button>
@@ -43,6 +43,10 @@
 <footer>
     <mat-toolbar color="primary">
         <span class="toolbar-fill-remaining-space"></span>
+        <a routerLink="/privacy">Privacy Policy</a>
+        &nbsp;:&nbsp;
+        <a routerLink="/disclaimer">Disclaimer</a>
+        &nbsp;:&nbsp;
         Developed using <object data="assets/img/jetbrains.svg" type="image/svg+xml"></object>
     </mat-toolbar>
 </footer>

@@ -3,6 +3,7 @@ import { UserService } from '../../services/user.service';
 import { ContentService } from '../../services/content.service';
 import { ContentEntity } from '../../entity/content.entity';
 import { environment } from '../../../environments/environment';
+import { UserEntity } from '../../entity/user.entity';
 
 @Component({
   selector: 'app-listposts',
@@ -31,7 +32,7 @@ export class ListpostsComponent implements OnInit, OnChanges  {
 
   ngOnInit() {
     this.uploadServerURL = environment.uploadServerURL;
-    if (this.userService.cachedUser != null) {
+    if (this.userService.getCachedUser('idtoken') != null) {
       this.fetchData();
     }
   }
@@ -43,12 +44,12 @@ export class ListpostsComponent implements OnInit, OnChanges  {
 
   fetchData() {
     const content = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
-    content.userId = this.userService.cachedUser.id;
+    const user: UserEntity = this.userService.getCachedUser('user');
+    content.userId = user.id;
     this.contentService.search(content).subscribe(data => {
       this.contentList = data;
     }, error => {
       console.log(error);
     });
   }
-
 }

@@ -1,9 +1,10 @@
-import { Component, OnInit, OnChanges, DoCheck, Input, SimpleChange, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { FileuploadService } from '../../services/fileupload.service';
 import { UserService } from '../../services/user.service';
 import { ContentEntity } from '../../entity/content.entity';
 import { ContentService } from '../../services/content.service';
-import { MatSnackBar, MatTabChangeEvent } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
+import { UserEntity } from '../../entity/user.entity';
 
 @Component({
   selector: 'app-editpost',
@@ -41,8 +42,9 @@ export class EditpostComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    if (this.userService.cachedUser != null) {
-      this.model.userId = this.userService.cachedUser.id;
+    const user: UserEntity = this.userService.getCachedUser('user');
+    if (user != null) {
+      this.model.userId = user.id;
       this.imageList = this.fileUploadService.imageListCache;
     }
   }

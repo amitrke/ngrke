@@ -4,6 +4,7 @@ import { FileuploadService } from '../services/fileupload.service';
 import { UserService } from '../services/user.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material';
+import { UserEntity } from '../entity/user.entity';
 
 @Component({
   selector: 'app-subpic',
@@ -31,8 +32,9 @@ export class SubpicComponent implements OnInit {
   }
 
   updateFilesList() {
-    if (this.userService.cachedUser != null) {
-      const folder = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id;
+    if (this.userService.getCachedUser('idtoken') != null) {
+      const user: UserEntity = this.userService.getCachedUser('user');
+      const folder = this.fileUploadService.uploadBaseFolder + user.id;
       this.fileUploadService.listFiles(folder).subscribe(data => {
         this.fileUploadService.imageListCache = data;
       }, error => {
@@ -42,7 +44,8 @@ export class SubpicComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    const fileName = this.fileUploadService.uploadBaseFolder + this.userService.cachedUser.id + '/' + this.fileToUpload.name;
+    const user: UserEntity = this.userService.getCachedUser('user');
+    const fileName = this.fileUploadService.uploadBaseFolder + user.id + '/' + this.fileToUpload.name;
     this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(
       event => {
         if (event.type === HttpEventType.UploadProgress) {
@@ -55,6 +58,9 @@ export class SubpicComponent implements OnInit {
       },
       (err) => {
         console.log('Upload Error:', err);
+        this.snackBar.open(err.error.message, undefined, {
+          duration: 2000,
+        });
       }, () => {
         this.snackBar.open('Image uploaded', undefined, {
           duration: 2000,

@@ -1,0 +1,6 @@
+<p *ngIf="status;else didNotLogoutContent">
+  Logged out successfully.
+</p>
+<ng-template #didNotLogoutContent>
+  You were probably not logged in, so couldn't log you out.
+</ng-template>

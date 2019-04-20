@@ -1,55 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { HttpErrorResponse } from '@angular/common/http/src/response';
 import { UserEntity } from '../entity/user.entity';
+import { BaseService } from './base.service';
 import { environment } from '../../environments/environment';
 
 @Injectable()
-export class UserService {
+export class UserService extends BaseService<UserEntity> {
 
-  private serviceURL = environment.serviceURL + 'users/';
-
-  constructor(private http: HttpClient) { }
-
-  public cachedUser: UserEntity;
-
-  get(id: String): Observable<any> {
-    return this.http.get(this.serviceURL + id)
-        .pipe(
-          catchError(this.handleError)
-        );
+  constructor(private httpClient: HttpClient) {
+    super(httpClient, 'users');
   }
 
-  search(user: UserEntity): Observable<any> {
-      return this.http.post(this.serviceURL + 'search', user)
-        .pipe(
-          catchError(this.handleError)
-      );
+  public setCachedUser(idtoken: string, user: UserEntity) {
+    localStorage.setItem('idtoken', idtoken);
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('expiry', JSON.stringify(new Date().getTime()));
+    this.cachedUser = user;
   }
 
-  create(user: UserEntity): Observable<any> {
-    return this.http.post(this.serviceURL, user)
-    .pipe(
-      catchError(this.handleError)
-    );
+  public removeCachedUser() {
+    localStorage.clear();
   }
 
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
-    }
-    // return an ErrorObservable with a user-facing error message
-    return new ErrorObservable(
-      'Something bad happened; please try again later.');
+  public tokensignin(idtoken: string): Observable<any> {
+    return this.httpClient.get(
+                            environment.serviceURL + '../tokensignin',
+                            { headers: {'token': idtoken}}
+                          )
+            .pipe(
+              catchError(this.handleError)
+            );
   }
 }

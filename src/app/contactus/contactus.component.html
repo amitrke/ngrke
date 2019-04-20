@@ -1,0 +1,8 @@
+<h1 class="mat-display-1">Contact Us</h1>
+<form #postForm="ngForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <textarea matInput id="message" required [(ngModel)]="model.textBody" name="message" placeholder="Type your message here"></textarea>
+    </mat-form-field>
+    <br>
+    <button mat-button [disabled]="!postForm.form.valid">Submit</button>
+</form>

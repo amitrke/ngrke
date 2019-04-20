@@ -35,7 +35,8 @@ import {
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MAT_DIALOG_DEFAULT_OPTIONS
 } from '@angular/material';
 import { AppRoutingModule } from './/app-routing.module';
 import { CmsPageComponent } from './cms-page/cms-page.component';
@@ -44,7 +45,6 @@ import {ContentService} from './services/content.service';
 import { HttpClientModule } from '@angular/common/http';
 import {CdkTableModule} from '@angular/cdk/table';
 import { LoginComponent } from './login/login.component';
-import { GoogleSignInComponent } from 'angular-google-signin';
 import { UserService } from './services/user.service';
 import { FileuploadService } from './services/fileupload.service';
 import { SubpicComponent } from './subpic/subpic.component';
@@ -54,6 +54,14 @@ import { EditpostComponent } from './myacc/editpost/editpost.component';
 import { SplitAndGetPipe } from './pipes/splitandget';
 import { WthrwdgitComponent } from './wthrwdgit/wthrwdgit.component';
 import { PhotoglryComponent } from './photoglry/photoglry.component';
+import { GoogleSigninComponent } from './google-signin/google-signin.component';
+import { TruncateAndEllipsis } from './pipes/truncelli';
+import { PhotogalleryService } from './services/photogallery.service';
+import { LogoutComponent } from './myacc/logout/logout.component';
+import { DisclaimerComponent } from './disclaimer/disclaimer.component';
+import { ContactusComponent } from './contactus/contactus.component';
+import { CnfdlgComponent } from './cnfdlg/cnfdlg.component';
+import { PrivacyComponent } from './privacy/privacy.component';
 
 @NgModule({
   declarations: [
@@ -61,14 +69,20 @@ import { PhotoglryComponent } from './photoglry/photoglry.component';
     CmsPageComponent,
     HomeComponent,
     LoginComponent,
-    GoogleSignInComponent,
     SubpicComponent,
     EditpostComponent,
     ListpicsComponent,
     ListpostsComponent,
     SplitAndGetPipe,
+    TruncateAndEllipsis,
     WthrwdgitComponent,
-    PhotoglryComponent
+    PhotoglryComponent,
+    GoogleSigninComponent,
+    LogoutComponent,
+    DisclaimerComponent,
+    ContactusComponent,
+    CnfdlgComponent,
+    PrivacyComponent
   ],
   imports: [
     BrowserModule,
@@ -109,7 +123,11 @@ import { PhotoglryComponent } from './photoglry/photoglry.component';
     MatToolbarModule,
     MatTooltipModule
   ],
-  providers: [ContentService, UserService, FileuploadService],
+  providers: [
+    ContentService, UserService, FileuploadService, PhotogalleryService,
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
+  ],
+  entryComponents: [CnfdlgComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

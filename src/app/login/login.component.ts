@@ -4,11 +4,11 @@ import { Component,
   OnInit,
   ChangeDetectorRef
  } from '@angular/core';
-import { GoogleSignInSuccess } from 'angular-google-signin';
 import { UserEntity } from '../entity/user.entity';
 import { UserService } from '../services/user.service';
 import { MatTabChangeEvent } from '@angular/material';
 import { FormControl } from '@angular/forms';
+import { GoogleSignInSuccess } from '../google-signin/google-signin.component';
 
 @Component({
   selector: 'app-login',
@@ -30,9 +30,9 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.userService.cachedUser != null) {
+    if (this.userService.getCachedUser('idtoken') != null) {
       this.loggedIn = true;
-      this.loggedInUser = this.userService.cachedUser;
+      this.loggedInUser = this.userService.getCachedUser('user');
     }
   }
 
@@ -48,49 +48,22 @@ export class LoginComponent implements OnInit {
     const googleUser: gapi.auth2.GoogleUser = event.googleUser;
     const id: string = googleUser.getId();
     const profile: gapi.auth2.BasicProfile = googleUser.getBasicProfile();
-
-    const user: UserEntity = new UserEntity(profile.getId(), undefined, undefined, undefined, undefined);
-
-    this.userService.search(user).subscribe(value => {
-        if (value.length > 0) {
-          this.setLoggedInUserFlags(value[0]);
-        } else {
-          this.registerUser(profile);
-        }
-      }, error => {
-        if (error) {
-          console.log('In error block, registering user');
-          this.registerUser(profile);
-        }
-      }
-    );
+    console.log('idtoken=' + googleUser.getAuthResponse().id_token);
+    this.userService.tokensignin(googleUser.getAuthResponse().id_token).subscribe(value => {
+      const user: UserEntity = new UserEntity(id, profile.getName(),
+           profile.getEmail(), profile.getImageUrl(), undefined);
+           user.id = Number.parseInt(value.response);
+      this.setLoggedInUserFlags(googleUser.getAuthResponse().id_token, user);
+    }, error => {
+      console.log('Error token stuff');
+    });
   }
 
-  setLoggedInUserFlags(user: UserEntity) {
-    this.userService.cachedUser = user;
+  setLoggedInUserFlags(idtoken: string, user: UserEntity) {
+    this.userService.setCachedUser(idtoken, user);
     this.loggedInUser = user;
     this.loggedIn = true;
     this.loginEvent.emit(user);
     this.changeDetectorRef.detectChanges();
-  }
-
-  registerUser(profile: gapi.auth2.BasicProfile) {
-    const user: UserEntity = new UserEntity(
-      profile.getId(),
-      profile.getName(),
-      profile.getEmail(),
-      profile.getImageUrl(),
-      'User'
-    );
-    this.userService.create(user).subscribe(value => {
-      if (value) {
-        console.log('Registration complete');
-        this.setLoggedInUserFlags(user);
-      }
-    }, error => {
-      if (error) {
-        console.log ('Could not register the user:' + console.dir(error));
-      }
-    });
   }
 }
