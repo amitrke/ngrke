@@ -79,12 +79,12 @@ jobs:
           keys:
           - ngrke-aws-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
           - ngrke-aws
-      - run: npm install
+      - run: yarn install
       - save_cache:
           paths:
             - node_modules
           key: ngrke-aws-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
-      - run: yarn build
+      - run: yarn builddev
       - run: mkdir bucket && echo "lorum ipsum" > bucket/build_asset.txt
       - run:
           name: Deploy to S3 dev
@@ -115,7 +115,7 @@ jobs:
           keys:
           - ngrke-aws-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
           - ngrke-aws
-      - run: npm install
+      - run: yarn install
       - save_cache:
           paths:
             - node_modules
