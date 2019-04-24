@@ -73,8 +73,8 @@ jobs:
             ls -larth
             cat src/environments/environment.prod.ts
             sed -i "s/##WEBSITE##/rke-dev/g" src/environments/environment.prod.ts
-            sed -i "s/##BUILD##/${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}/g" src/environments/environment.prod.ts
-            cat src/environments/environment.prod.ts
+            sed -i "s/##BUILD##/${CIRCLE_BRANCH}-${CIRCLE_BUILD_NUM}/g" src/environments/environment.dev.ts
+            cat src/environments/environment.dev.ts
       - restore_cache:
           keys:
           - ngrke-aws-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
