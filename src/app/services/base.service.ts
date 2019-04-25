@@ -9,12 +9,14 @@ import { UserEntity } from '../entity/user.entity';
 export class BaseService<T extends BaseEntity> {
 
     private serviceURL: string;
+    private awsServiceURL: string;
     public cachedUser: UserEntity;
 
     constructor(
         private http: HttpClient,
         private service: string) {
             this.serviceURL = environment.serviceURL + service + '/';
+            this.awsServiceURL = environment.awsServiceURL + '/';
     }
 
     public get(id: String): Observable<any> {

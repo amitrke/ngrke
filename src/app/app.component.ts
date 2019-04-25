@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from './services/user.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,6 @@ import { UserService } from './services/user.service';
 })
 export class AppComponent {
   title = 'Roorkee';
-
-  constructor(private userService: UserService) {}
+  public buildInfo = environment.website + '-' + environment.build;
+  constructor(public userService: UserService) {}
 }

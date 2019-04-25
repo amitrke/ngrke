@@ -26,7 +26,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
   @Output() navToTabIndex = new EventEmitter<number>();
 
   constructor(
-    private fileUploadService: FileuploadService,
+    public fileUploadService: FileuploadService,
     private photogalleryService: PhotogalleryService,
     private userService: UserService,
     public snackBar: MatSnackBar,

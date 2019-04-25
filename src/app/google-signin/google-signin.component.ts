@@ -19,7 +19,7 @@ export class GoogleSignInFailure {
 })
 export class GoogleSigninComponent implements OnInit, AfterViewInit {
 
-  private id = 'google-signin2';
+  public id = 'google-signin2';
 
   // Render options
   @Input() private scope: string;
