@@ -9,9 +9,9 @@
   An error occurred while communicating with the server, please try again later.
 </div>
 <mat-card *ngFor="let content of contentList" class="home-card">
-  <mat-card-title>{{content.title}}</mat-card-title>
   <img mat-card-image src="{{uploadServerURL}}/{{content.imageURL}}">
   <mat-card-content>
+    <h2>{{content.title}}</h2>
       {{content.description}}
   </mat-card-content>
   <mat-card-actions>
