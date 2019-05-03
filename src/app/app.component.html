@@ -1,6 +1,8 @@
 <header>
     <mat-toolbar color="primary">
-        <mat-menu #appMenu="matMenu">
+        <a routerLink="/home" class="website-name">Roorkee.org</a>
+        <span class="toolbar-fill-remaining-space"></span>
+       <mat-menu #appMenu="matMenu">
             <button mat-menu-item *ngIf="userService.cachedUser" routerLink="/login">
                 <mat-icon>account_circle</mat-icon>
                 <span>My Account</span>
@@ -28,12 +30,7 @@
         </mat-menu>
         <button mat-icon-button [matMenuTriggerFor]="appMenu">
             <mat-icon>more_vert</mat-icon>
-        </button>
-        <a routerLink="/home" class="website-name">Roorkee.org</a>
-        <span class="toolbar-fill-remaining-space"></span>
-        <div *ngIf="userService.cachedUser">{{userService.cachedUser.name}}</div>
-        <button mat-icon-button routerLink="/login">
-            <mat-icon>account_circle</mat-icon>
+          <span *ngIf="userService.cachedUser">{{userService.cachedUser.name}}</span>
         </button>
     </mat-toolbar>
 </header>
