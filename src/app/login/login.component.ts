@@ -49,16 +49,23 @@ export class LoginComponent implements OnInit {
     const id: string = googleUser.getId();
     const profile: gapi.auth2.BasicProfile = googleUser.getBasicProfile();
     console.log('idtoken=' + googleUser.getAuthResponse().id_token);
-    this.userService.getAWSAuthKeys(googleUser.getAuthResponse().id_token).subscribe(value => {
-      const user: UserEntity = new UserEntity(id, profile.getName(),
+    const user: UserEntity = new UserEntity(id, profile.getName(),
            profile.getEmail(), profile.getImageUrl(), undefined);
-
+    this.userService.getAWSAuthKeys(googleUser.getAuthResponse().id_token).subscribe(value => {
       this.userService.setAWSCachedUser(
             value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.AccessKeyId,
             value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SecretAccessKey,
             value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SessionToken,
             user);
       console.dir(value);
+
+      this.userService.getAWSUser(user).subscribe(value => {
+        console.dir(value);
+      },
+      error => {
+        console.log('Error AWS getting user');
+      });
+
     }, error => {
       console.log('Error AWS token stuff');
     });

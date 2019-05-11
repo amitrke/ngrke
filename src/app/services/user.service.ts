@@ -47,6 +47,21 @@ export class UserService extends BaseService<UserEntity> {
     );
   }
 
+  public getAWSUser(user: UserEntity): Observable<any> {
+    return this.httpClient.post(
+              environment.awsServiceURL + '?TableName=subnextsrv1-dev_user&filter=email&value=' + user.email,
+              user,
+              { headers:
+                {
+                  'AccessKeyId': localStorage.getItem('AccessKeyId'),
+                  'SecretAccessKey': localStorage.getItem('SecretAccessKey'),
+                  'SessionToken': localStorage.getItem('SessionToken')
+                }
+              }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   public tokensignin(idtoken: string): Observable<any> {
     return this.httpClient.get(
                             environment.serviceURL + '../tokensignin',
