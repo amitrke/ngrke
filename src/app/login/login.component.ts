@@ -57,14 +57,14 @@ export class LoginComponent implements OnInit {
             value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SecretAccessKey,
             value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SessionToken,
             user);
-      console.dir(value);
 
-      this.userService.getAWSUser(user).subscribe(value => {
+      this.userService.getAWSUser(user).then(value => {
         console.dir(value);
       },
       error => {
         console.log('Error AWS getting user');
       });
+
 
     }, error => {
       console.log('Error AWS token stuff');
