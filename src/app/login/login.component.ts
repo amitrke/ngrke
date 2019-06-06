@@ -59,6 +59,20 @@ export class LoginComponent implements OnInit {
             user);
 
       this.userService.getAWSUser(user).then(value => {
+        if (value.length > 0){
+          console.log("Add code to handle existing user.");
+        }
+        else{
+          //Save user
+          this.userService.createAWSUser(user).then(usercr => {
+            console.dir(usercr);
+            console.log("User should have been created by now");
+          },
+          error => {
+            console.dir(error);
+          });
+          console.log("Add code to create a user.");
+        }
         console.dir(value);
       },
       error => {

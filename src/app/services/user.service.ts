@@ -7,7 +7,6 @@ import { BaseService } from './base.service';
 import { environment } from '../../environments/environment';
 import { AwsClient } from 'aws4fetch';
 import { AWSCredentials } from '../entity/awscredentials.entity';
-import { BaseEntity } from '../entity/base.entity';
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
@@ -83,8 +82,30 @@ export class UserService extends BaseService<UserEntity> {
 
   async getAWSUser(user: UserEntity) {
     const res = await this.getAWSClient().fetch(
-          `${environment.awsServiceURL}?TableName=subnextsrv1-dev_user&filter=email&value=${user.email}`, 
-           {});
+          `${environment.awsServiceURL}/User/q/{"social.email":"${user.email}","webid":"${environment.website}"}`,
+           {}
+          );
+    return res.json();
+  }
+
+  async createAWSUser(user: UserEntity) {
+    const postBody = {
+      name: user.name,
+      type: 'pr-user',
+      created: new Date(),
+      lastLogin: new Date(),
+      webId: environment.website,
+      social: [
+        {
+          id: user.gid, type: 'gl', email: user.email, profilePic: user.imageURL
+        }
+      ]
+    }
+    const res = await this.getAWSClient().fetch(
+          `${environment.awsServiceURL}/User`, {
+            method: 'PUT', 
+            body: JSON.stringify(postBody)
+          });
     return res.json();
   }
 

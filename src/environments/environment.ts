@@ -7,7 +7,7 @@ export const environment = {
   production: false,
   serviceURL: 'http://localhost:8080/api/',
   uploadServerURL: 'http://localhost:8080',
-  awsServiceURL: 'https://api.aws.roorkee.org/dev/db',
+  awsServiceURL: 'http://localhost:3000/v1',
   staticContentURL: 'https://www-static.roorkee.org/dev',
   website: 'rke-dev',
   build: '123'
