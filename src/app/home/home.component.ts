@@ -13,7 +13,7 @@ import { UserService } from '../services/user.service';
 })
 export class HomeComponent implements OnInit {
 
-  contentList: ContentEntity[];
+  contentList: [];
   public uploadServerURL: string;
   public error: boolean;
 
@@ -30,20 +30,13 @@ export class HomeComponent implements OnInit {
 
     const searchCriteria = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
     searchCriteria.status = 'published-to-homepage';
-    this.contentService.search(searchCriteria).subscribe(data => {
+    this.contentService.awsSearch(searchCriteria).subscribe(data => {
       this.contentList = data;
-      this.contentList.sort((obj1, obj2) => {
-        if (obj1.priority < obj2.priority) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
     }, error => {
         this.error = true;
         console.error(error);
     });
-    this.uploadServerURL = environment.uploadServerURL;
+    this.uploadServerURL = environment.staticContentURL;
   }
 
   moreBtnClick = function (url: String) {

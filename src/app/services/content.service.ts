@@ -14,7 +14,7 @@ export class ContentService extends BaseService<ContentEntity> {
     super(httpClient, 'articles');
   }
 
-  public homepage(): Observable<any> {
-    return this.doGet('https://storage.googleapis.com/up.roorkee.org/cache/home.json');
+  public awsSearch(entity: ContentEntity): Observable<any> {
+    return this.doAwsGet(`${environment.awsServiceURL}/Post/q/{"webid":"${environment.website}","status":"published"}`);
   }
 }

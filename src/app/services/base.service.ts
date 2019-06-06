@@ -50,6 +50,13 @@ export class BaseService<T extends BaseEntity> {
             );
     }
 
+    protected doAwsGet(url: string): Observable<any> {
+      return this.http.get(url)
+          .pipe(
+            catchError(this.handleError)
+          );
+  }
+
     protected doPost(url: string, entity: T): Observable<any> {
         let idtoken = this.getCachedUser('idtoken');
         idtoken = idtoken != null ? idtoken : '';
