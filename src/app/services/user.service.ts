@@ -94,7 +94,7 @@ export class UserService extends BaseService<UserEntity> {
       type: 'pr-user',
       created: new Date(),
       lastLogin: new Date(),
-      webId: environment.website,
+      webid: environment.website,
       social: [
         {
           id: user.gid, type: 'gl', email: user.email, profilePic: user.imageURL
