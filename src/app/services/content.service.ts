@@ -17,4 +17,8 @@ export class ContentService extends BaseService<ContentEntity> {
   public awsSearch(entity: ContentEntity): Observable<any> {
     return this.doAwsGet(`${environment.awsServiceURL}/Post/q/{"webid":"${environment.website}","status":"published"}`);
   }
+
+  public awsGet(id: String): Observable<any> {
+    return this.doAwsGet(`${environment.awsServiceURL}/Post/${id}`);
+  }
 }

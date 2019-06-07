@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
 })
 export class CmsPageComponent implements OnInit {
 
-  public content: ContentEntity;
+  public content: any;
   public uploadServerURL: string;
 
   constructor(
@@ -22,8 +22,8 @@ export class CmsPageComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    this.uploadServerURL = environment.uploadServerURL;
-    this.contentService.get(id)
+    this.uploadServerURL = environment.staticContentURL;
+    this.contentService.awsGet(id)
       .subscribe(content => this.content = content);
   }
 }
