@@ -12,12 +12,14 @@ export class FileuploadService {
 
   constructor(private http: HttpClient) { }
 
-  postFile(fileToUpload: File, fileName: string): Observable<any> {
+  postFile(fileToUpload: any, fileName: string): Observable<any> {
     this.imageListCache = [];
     const idtoken = this.getCachedUser('idtoken');
-    return this.http.post(this.serviceURL, fileToUpload,
-      { headers: {'filename': fileName, 'enctype': 'multipart/form-data', 'idtoken': idtoken}
-      , reportProgress: true});
+    const postBody = {
+      fileData: fileToUpload,
+      fileName: fileName
+    };
+    return this.http.post(this.serviceURL, postBody);
   }
 
   listFiles(folder: string): Observable<any> {

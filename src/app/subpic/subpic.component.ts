@@ -43,10 +43,12 @@ export class SubpicComponent implements OnInit {
     }
   }
 
-  onSubmit(form: NgForm) {
+  async onSubmit(form: NgForm) {
     const user: UserEntity = this.userService.getCachedUser('user');
     const fileName = this.fileUploadService.uploadBaseFolder + user.id + '/' + this.fileToUpload.name;
-    this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(
+    const base64Image = await this.toBase64(this.fileToUpload);
+
+    this.fileUploadService.postFile(base64Image, fileName).subscribe(
       event => {
         if (event.type === HttpEventType.UploadProgress) {
           const percentDone = Math.round(100 * event.loaded / event.total);
@@ -69,4 +71,11 @@ export class SubpicComponent implements OnInit {
       }
     );
   }
+
+  toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  })
 }
