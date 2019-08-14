@@ -44,54 +44,37 @@ export class LoginComponent implements OnInit {
     this.selectedTab.setValue(event);
   }
 
-  onGoogleSignInSuccess(event: GoogleSignInSuccess) {
+  onGoogleSignInSuccess = async(event: GoogleSignInSuccess) => {
     const googleUser: gapi.auth2.GoogleUser = event.googleUser;
     const id: string = googleUser.getId();
     const profile: gapi.auth2.BasicProfile = googleUser.getBasicProfile();
     console.log('idtoken=' + googleUser.getAuthResponse().id_token);
-    const user: UserEntity = new UserEntity(id, profile.getName(),
-           profile.getEmail(), profile.getImageUrl(), undefined);
-    this.userService.getAWSAuthKeys(googleUser.getAuthResponse().id_token).subscribe(value => {
-      this.userService.setAWSCachedUser(
-            value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.AccessKeyId,
-            value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SecretAccessKey,
-            value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SessionToken,
-            user);
 
-      this.userService.getAWSUser(user).then(value => {
-        if (value.length > 0){
-          console.log("Add code to handle existing user.");
-        }
-        else{
-          //Save user
-          this.userService.createAWSUser(user).then(usercr => {
-            console.dir(usercr);
-            console.log("User should have been created by now");
-          },
-          error => {
-            console.dir(error);
-          });
-          console.log("Add code to create a user.");
-        }
-        console.dir(value);
-      },
-      error => {
-        console.log('Error AWS getting user');
-      });
+    const user: UserEntity = new UserEntity(
+      id, profile.getName(), profile.getEmail(), profile.getImageUrl(), undefined
+    );
 
+    const keys = await this.userService.getAWSAuthKeys(googleUser.getAuthResponse().id_token).toPromise();
+    await this.userService.setAWSCachedUser(
+      keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.AccessKeyId,
+      keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SecretAccessKey,
+      keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SessionToken,
+      user
+    );
+    const existingUser = await this.userService.getAWSUser(user);
 
-    }, error => {
-      console.log('Error AWS token stuff');
-    });
-
-    this.userService.tokensignin(googleUser.getAuthResponse().id_token).subscribe(value => {
-      const user: UserEntity = new UserEntity(id, profile.getName(),
-           profile.getEmail(), profile.getImageUrl(), undefined);
-           user.id = Number.parseInt(value.response);
+    if (existingUser) {
+      console.log('Add code to handle existing user.');
       this.setLoggedInUserFlags(googleUser.getAuthResponse().id_token, user);
-    }, error => {
-      console.log('Error token stuff');
-    });
+    } else {
+      const newUser = await this.userService.createAWSUser(user);
+      if (newUser) {
+        console.log('User should have been created by now');
+        this.setLoggedInUserFlags(googleUser.getAuthResponse().id_token, newUser);
+      } else {
+        console.log('Error creating new user');
+      }
+    }
   }
 
   setLoggedInUserFlags(idtoken: string, user: UserEntity) {

@@ -29,7 +29,7 @@ export class UserService extends BaseService<UserEntity> {
     this.cachedUser = user;
   }
 
-  public setAWSCachedUser(accessKeyId: string, secretAccessKey: string, sessionToken: string, user: UserEntity) {
+  public setAWSCachedUser = async(accessKeyId: string, secretAccessKey: string, sessionToken: string, user: UserEntity) => {
     this.awsCredentials = new AWSCredentials(accessKeyId, secretAccessKey, sessionToken);
     localStorage.setItem('AccessKeyId', accessKeyId);
     localStorage.setItem('SecretAccessKey', secretAccessKey);
@@ -63,6 +63,11 @@ export class UserService extends BaseService<UserEntity> {
     );
   }
 
+  public setAWSAuthKeys = async(idtoken: string) => {
+    const keys = await this.getAWSAuthKeys(idtoken).toPromise();
+
+  }
+
   private getAWSClient(): AwsClient {
     if (this.awsClient === undefined) {
       const awsCred = this.getAWSCachedUser();
@@ -80,7 +85,7 @@ export class UserService extends BaseService<UserEntity> {
     }
   }
 
-  async getAWSUser(user: UserEntity) {
+  getAWSUser = async(user: UserEntity) => {
     const res = await this.getAWSClient().fetch(
           `${environment.awsServiceURL}/User/q/{"social.email":"${user.email}","webid":"${environment.website}"}`,
            {}
@@ -88,7 +93,7 @@ export class UserService extends BaseService<UserEntity> {
     return res.json();
   }
 
-  async createAWSUser(user: UserEntity) {
+  createAWSUser = async(user: UserEntity) => {
     const postBody = {
       name: user.name,
       type: 'pr-user',
