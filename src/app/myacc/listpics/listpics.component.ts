@@ -4,7 +4,9 @@ import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
 import { PhotogalleryService } from '../../services/photogallery.service';
 import { PhotogalleryEntity } from '../../entity/photogallery.entity';
-import { MatSlideToggleChange, MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CnfdlgComponent } from '../../cnfdlg/cnfdlg.component';
 import { UserEntity } from '../../entity/user.entity';
 

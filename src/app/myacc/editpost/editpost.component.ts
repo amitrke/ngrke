@@ -3,7 +3,7 @@ import { FileuploadService } from '../../services/fileupload.service';
 import { UserService } from '../../services/user.service';
 import { ContentEntity } from '../../entity/content.entity';
 import { ContentService } from '../../services/content.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserEntity } from '../../entity/user.entity';
 
 @Component({

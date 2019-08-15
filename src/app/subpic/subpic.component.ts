@@ -3,7 +3,7 @@ import { FormGroup, NgForm } from '@angular/forms';
 import { FileuploadService } from '../services/fileupload.service';
 import { UserService } from '../services/user.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserEntity } from '../entity/user.entity';
 
 @Component({

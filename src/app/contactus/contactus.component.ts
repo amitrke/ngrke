@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MailEntity } from '../entity/mail.entity';
 import { MailService } from '../services/mail.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../services/user.service';
 import { UserEntity } from '../entity/user.entity';
 

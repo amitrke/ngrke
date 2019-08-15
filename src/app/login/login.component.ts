@@ -6,7 +6,7 @@ import { Component,
  } from '@angular/core';
 import { UserEntity } from '../entity/user.entity';
 import { UserService } from '../services/user.service';
-import { MatTabChangeEvent } from '@angular/material';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { FormControl } from '@angular/forms';
 import { GoogleSignInSuccess } from '../google-signin/google-signin.component';
 
