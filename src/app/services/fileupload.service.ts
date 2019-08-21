@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class FileuploadService {
 
   private serviceURL = environment.serviceURL + 'image/';
-  public uploadBaseFolder = 'upload/users/';
+  public uploadBaseFolder = environment.uploadServerURL;
   public imageListCache = [];
 
   constructor(private http: HttpClient) { }
 
-  postFile(fileToUpload: any, fileName: string): Observable<any> {
+  postFile(base64data: any, fileName: string, file: File): Observable<any> {
     this.imageListCache = [];
-    const idtoken = this.getCachedUser('idtoken');
     const postBody = {
-      fileData: fileToUpload,
-      fileName: fileName
+      data: base64data,
+      name: fileName,
+      size: file.size,
+      type: file.type
     };
     return this.http.post(this.serviceURL, postBody);
   }

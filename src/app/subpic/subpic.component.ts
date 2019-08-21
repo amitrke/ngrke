@@ -5,6 +5,7 @@ import { UserService } from '../services/user.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserEntity } from '../entity/user.entity';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-subpic',
@@ -45,10 +46,9 @@ export class SubpicComponent implements OnInit {
 
   async onSubmit(form: NgForm) {
     const user: UserEntity = this.userService.getCachedUser('user');
-    const fileName = this.fileUploadService.uploadBaseFolder + user.id + '/' + this.fileToUpload.name;
+    const fileName = `${environment.env}/up/usr/${user._id}/${this.fileToUpload.name}`;
     const base64Image = await this.toBase64(this.fileToUpload);
-
-    this.fileUploadService.postFile(base64Image, fileName).subscribe(
+    this.fileUploadService.postFile(base64Image, fileName, this.fileToUpload).subscribe(
       event => {
         if (event.type === HttpEventType.UploadProgress) {
           const percentDone = Math.round(100 * event.loaded / event.total);

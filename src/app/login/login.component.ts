@@ -64,8 +64,7 @@ export class LoginComponent implements OnInit {
     const existingUser = await this.userService.getAWSUser(user);
 
     if (existingUser) {
-      console.log('Add code to handle existing user.');
-      this.setLoggedInUserFlags(googleUser.getAuthResponse().id_token, user);
+      this.setLoggedInUserFlags(googleUser.getAuthResponse().id_token, existingUser);
     } else {
       const newUser = await this.userService.createAWSUser(user);
       if (newUser) {
