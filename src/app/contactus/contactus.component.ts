@@ -53,8 +53,8 @@ export class ContactusComponent implements OnInit {
   createMailBody() {
     const user: UserEntity = this.userService.getCachedUser('user');
     let content = '<h3>Contact Us communication sent from roorkee.org</h3>';
-    content += '<img src=\'' + user.imageURL + '\'>';
-    content += '<p>From:' + user.name + '(' + user.email + ')</p>';
+    content += '<img src=\'' + user.getImageUrl() + '\'>';
+    content += '<p>From:' + user.name + '(' + user.getEmail() + ')</p>';
     content += '<p>' + this.model.textBody + '</p>';
     content += '<p>Local time:' + new Date() + '</p>';
     return content;

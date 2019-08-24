@@ -45,7 +45,7 @@ export class SubpicComponent implements OnInit {
   }
 
   async onSubmit(form: NgForm) {
-    const user: UserEntity = this.userService.getCachedUser('user');
+    const user: UserEntity = this.userService.getCachedUser('user')[0];
     const fileName = `${environment.env}/up/usr/${user._id}/${this.fileToUpload.name}`;
     const base64Image = await this.toBase64(this.fileToUpload);
     this.fileUploadService.postFile(base64Image, fileName, this.fileToUpload).subscribe(

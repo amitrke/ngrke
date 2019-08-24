@@ -87,29 +87,17 @@ export class UserService extends BaseService<UserEntity> {
 
   getAWSUser = async(user: UserEntity) => {
     const res = await this.getAWSClient().fetch(
-          `${environment.awsServiceURL}/User/q/{"social.email":"${user.email}","webid":"${environment.website}"}`,
+          `${environment.awsServiceURL}/User/q/{"social.email":"${user.getEmail()}","webid":"${environment.website}"}`,
            {}
           );
     return res.json();
   }
 
   createAWSUser = async(user: UserEntity) => {
-    const postBody = {
-      name: user.name,
-      type: 'pr-user',
-      created: new Date(),
-      lastLogin: new Date(),
-      webid: environment.website,
-      social: [
-        {
-          id: user.gid, type: 'gl', email: user.email, profilePic: user.imageURL
-        }
-      ]
-    }
     const res = await this.getAWSClient().fetch(
           `${environment.awsServiceURL}/User`, {
-            method: 'PUT', 
-            body: JSON.stringify(postBody)
+            method: 'PUT',
+            body: JSON.stringify(user)
           });
     return res.json();
   }
