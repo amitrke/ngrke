@@ -6,8 +6,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class FileuploadService {
 
-  private serviceURL = environment.serviceURL + 'image/';
-  public uploadBaseFolder = environment.uploadServerURL;
+  private serviceURL = environment.awsFileServiceURL;
   public imageListCache = [];
 
   constructor(private http: HttpClient) { }
