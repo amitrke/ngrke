@@ -22,9 +22,8 @@ export class FileuploadService {
     return this.http.post(this.serviceURL, postBody);
   }
 
-  listFiles(folder: string): Observable<any> {
-    const idtoken = this.getCachedUser('idtoken');
-    return this.http.get(this.serviceURL, { headers: {'folder': folder, 'idtoken': idtoken}});
+  listFiles(userid: number): Observable<any> {
+    return this.http.get(this.serviceURL, { headers: {'userid': `${userid}`, 'env': environment.env}});
   }
 
   delete(filename: string): Observable<any> {

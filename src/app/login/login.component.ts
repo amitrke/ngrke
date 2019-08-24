@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     if (this.userService.getCachedUser('idtoken') != null) {
       this.loggedIn = true;
-      this.loggedInUser = this.userService.getCachedUser('user');
+      this.loggedInUser = this.userService.getCachedUser('user')[0];
     }
   }
 

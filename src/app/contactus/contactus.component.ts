@@ -31,7 +31,7 @@ export class ContactusComponent implements OnInit {
       });
       return;
     }
-    this.model.fromUserId = user.id;
+    this.model.fromUserId = user[0].id;
     this.model.htmlBody = this.createMailBody();
     this.mailService.sendEmail(this.model).subscribe(data => {
       this.snackBar.open('Communication sent', undefined, {
@@ -51,7 +51,7 @@ export class ContactusComponent implements OnInit {
   }
 
   createMailBody() {
-    const user: UserEntity = this.userService.getCachedUser('user');
+    const user: UserEntity = this.userService.getCachedUser('user')[0];
     let content = '<h3>Contact Us communication sent from roorkee.org</h3>';
     content += '<img src=\'' + user.getImageUrl() + '\'>';
     content += '<p>From:' + user.name + '(' + user.getEmail() + ')</p>';

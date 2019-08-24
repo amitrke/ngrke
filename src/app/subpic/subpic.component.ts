@@ -34,9 +34,8 @@ export class SubpicComponent implements OnInit {
 
   updateFilesList() {
     if (this.userService.getCachedUser('idtoken') != null) {
-      const user: UserEntity = this.userService.getCachedUser('user');
-      const folder = this.fileUploadService.uploadBaseFolder + user.id;
-      this.fileUploadService.listFiles(folder).subscribe(data => {
+      const user: UserEntity = this.userService.getCachedUser('user')[0];
+      this.fileUploadService.listFiles(user.id).subscribe(data => {
         this.fileUploadService.imageListCache = data;
       }, error => {
         console.log(error);

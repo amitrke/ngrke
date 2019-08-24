@@ -52,8 +52,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
   updateFilesList() {
     const user: UserEntity = this.userService.getCachedUser('user');
     if (user != null) {
-      const folder = this.fileUploadService.uploadBaseFolder + user.id;
-      this.fileUploadService.listFiles(folder).subscribe(data => {
+      this.fileUploadService.listFiles(user[0].id).subscribe(data => {
         this.imageList = data;
         this.fileUploadService.imageListCache = data;
       }, error => {
@@ -67,7 +66,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
   updatePhotogalleryList() {
     const searchCriteria = new PhotogalleryEntity(undefined);
     const user: UserEntity = this.userService.getCachedUser('user');
-      searchCriteria.userId = user.id;
+      searchCriteria.userId = user[0].id;
       this.photogalleryService.search(searchCriteria).subscribe(data => {
         this.galleryList = data;
       }, error => {
@@ -90,7 +89,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
     if (event.checked) { // Add to gallery
       const glry = new PhotogalleryEntity(event.source.id);
       const user: UserEntity = this.userService.getCachedUser('user');
-      glry.userId = user.id;
+      glry.userId = user[0].id;
       this.photogalleryService.save(glry).subscribe(data => {
         this.updatePhotogalleryList();
         this.snackBar.open('Added to photogallery', undefined, {
@@ -126,7 +125,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
 
   onDelete(fileName: string) {
     const user: UserEntity = this.userService.getCachedUser('user');
-    this.name = user.name;
+    this.name = user[0].name;
     this.animal = 'you want to delete this file';
 
     const dialogRef = this.dialog.open(CnfdlgComponent, {
