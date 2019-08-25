@@ -18,7 +18,7 @@ import { UserEntity } from '../../entity/user.entity';
 export class ListpicsComponent implements OnInit, OnChanges {
 
   public imageList: string[];
-  public uploadServerURL: string;
+  public staticContentURL: string;
   public galleryList: PhotogalleryEntity[];
 
   animal: string;
@@ -36,7 +36,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.uploadServerURL = environment.uploadServerURL;
+    this.staticContentURL = environment.staticContentURL;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -51,8 +51,9 @@ export class ListpicsComponent implements OnInit, OnChanges {
 
   updateFilesList() {
     const user: UserEntity = this.userService.getCachedUser('user');
+    console.dir(user);
     if (user != null) {
-      this.fileUploadService.listFiles(user[0].id).subscribe(data => {
+      this.fileUploadService.listFiles(user[0]._id).subscribe(data => {
         this.imageList = data;
         this.fileUploadService.imageListCache = data;
       }, error => {
@@ -66,7 +67,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
   updatePhotogalleryList() {
     const searchCriteria = new PhotogalleryEntity(undefined);
     const user: UserEntity = this.userService.getCachedUser('user');
-      searchCriteria.userId = user[0].id;
+      searchCriteria.userId = user[0]._id;
       this.photogalleryService.search(searchCriteria).subscribe(data => {
         this.galleryList = data;
       }, error => {
@@ -89,7 +90,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
     if (event.checked) { // Add to gallery
       const glry = new PhotogalleryEntity(event.source.id);
       const user: UserEntity = this.userService.getCachedUser('user');
-      glry.userId = user[0].id;
+      glry.userId = user[0]._id;
       this.photogalleryService.save(glry).subscribe(data => {
         this.updatePhotogalleryList();
         this.snackBar.open('Added to photogallery', undefined, {

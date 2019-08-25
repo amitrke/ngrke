@@ -44,7 +44,7 @@ export class EditpostComponent implements OnInit, OnChanges {
   ngOnInit() {
     const user: UserEntity = this.userService.getCachedUser('user');
     if (user != null) {
-      this.model.userId = user[0].id;
+      this.model.userId = user[0]._id;
       this.imageList = this.fileUploadService.imageListCache;
     }
   }

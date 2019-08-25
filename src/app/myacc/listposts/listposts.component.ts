@@ -45,7 +45,7 @@ export class ListpostsComponent implements OnInit, OnChanges  {
   fetchData() {
     const content = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
     const user: UserEntity = this.userService.getCachedUser('user');
-    content.userId = user[0].id;
+    content.userId = user[0]._id;
     this.contentService.search(content).subscribe(data => {
       this.contentList = data;
     }, error => {

@@ -31,7 +31,7 @@ export class ContactusComponent implements OnInit {
       });
       return;
     }
-    this.model.fromUserId = user[0].id;
+    this.model.fromUserId = user[0]._id;
     this.model.htmlBody = this.createMailBody();
     this.mailService.sendEmail(this.model).subscribe(data => {
       this.snackBar.open('Communication sent', undefined, {

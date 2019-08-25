@@ -1,7 +1,7 @@
 <div *ngIf="loggedIn;else preLoginContent">
   <div>
     <h2 class="mat-h2" style="text-align: left">My Account</h2>
-    <img src="{{loggedInUser.social[0].profilePic}}">
+    <img *ngIf="loggedInUser.social" src="{{loggedInUser.social[0].profilePic}}">
   </div>
 </div>
   <div>
