@@ -23,7 +23,7 @@ export class FileuploadService {
   }
 
   listFiles(userid: number): Observable<any> {
-    return this.http.get(this.serviceURL, { headers: {'userid': `${userid}`, 'env': environment.env}});
+    return this.http.get(`${this.serviceURL}/${environment.env}/${userid}`);
   }
 
   delete(filename: string): Observable<any> {
