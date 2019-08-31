@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserEntity } from '../entity/user.entity';
 import { BaseService } from './base.service';
@@ -19,15 +19,10 @@ export class UserService extends BaseService<UserEntity> {
     super(httpClient, 'users');
   }
 
+  cachedUserChange: Subject<UserEntity> = new Subject<UserEntity>();
+
   private awsClient: AwsClient;
   private awsCredentials: AWSCredentials;
-
-  public setCachedUser(idtoken: string, user: UserEntity) {
-    localStorage.setItem('idtoken', idtoken);
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('expiry', JSON.stringify(new Date().getTime()));
-    this.cachedUser = user;
-  }
 
   public setAWSCachedUser = async(accessKeyId: string, secretAccessKey: string, sessionToken: string, user: UserEntity) => {
     this.awsCredentials = new AWSCredentials(accessKeyId, secretAccessKey, sessionToken);
@@ -36,9 +31,13 @@ export class UserService extends BaseService<UserEntity> {
     localStorage.setItem('SessionToken', sessionToken);
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('expiry', JSON.stringify(new Date().getTime()));
-    if (this.cachedUser === undefined) {
-      this.cachedUser = user;
-    }
+    this.setCachedUser(user);
+  }
+
+  public setCachedUser = (user: UserEntity) => {
+    this.cachedUser = user;
+    console.log('userService: cachedUser updated');
+    this.cachedUserChange.next(user);
   }
 
   public getAWSCachedUser(): AWSCredentials {

@@ -14,7 +14,7 @@
   
     <mat-form-field>
       <mat-select id="imageURL" required [(ngModel)]="model.imageURL" name="imageURL" placeholder="Image">
-        <mat-option *ngFor="let item of imageList" value="{{item}}">{{item | splitAndGet:"/":3}}</mat-option>
+        <mat-option *ngFor="let item of imageList" value="{{item}}">{{item.Key | splitAndGet:"/":4}}</mat-option>
       </mat-select>
     </mat-form-field>
     <button mat-button [disabled]="!postForm.form.valid">Submit</button>

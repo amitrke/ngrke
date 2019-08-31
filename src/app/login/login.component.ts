@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
     if (this.userService.getCachedUser('idtoken') != null) {
       this.loggedIn = true;
       this.loggedInUser = this.userService.getCachedUser('user')[0];
+      this.userService.setCachedUser(this.loggedInUser);
     }
   }
 
@@ -73,7 +74,6 @@ export class LoginComponent implements OnInit {
   }
 
   setLoggedInUserFlags = (idtoken: string, user: UserEntity) => {
-    this.userService.setCachedUser(idtoken, user);
     this.loggedInUser = user;
     this.loggedIn = true;
     this.loginEvent.emit(user);
