@@ -32,7 +32,7 @@ export class ListpostsComponent implements OnInit, OnChanges  {
 
   ngOnInit() {
     this.uploadServerURL = environment.uploadServerURL;
-    if (this.userService.getCachedUser('idtoken') != null) {
+    if (this.userService.cachedUser) {
       this.fetchData();
     }
   }
@@ -43,10 +43,9 @@ export class ListpostsComponent implements OnInit, OnChanges  {
   }
 
   fetchData() {
-    const content = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
-    const user: UserEntity = this.userService.getCachedUser('user');
-    content.userId = user[0]._id;
-    this.contentService.search(content).subscribe(data => {
+    const content = new ContentEntity(undefined, undefined, undefined, undefined);
+    const user: UserEntity = this.userService.cachedUser;
+    this.contentService.awsSearch(content).subscribe(data => {
       this.contentList = data;
     }, error => {
       console.log(error);

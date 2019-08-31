@@ -24,11 +24,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.userService.getCachedUser('idtoken') != null) {
-      this.userService.getCachedUser('user');
-    }
-
-    const searchCriteria = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
+    const searchCriteria = new ContentEntity(undefined, undefined, undefined, undefined);
     searchCriteria.status = 'published-to-homepage';
     this.contentService.awsSearch(searchCriteria).subscribe(data => {
       this.contentList = data;

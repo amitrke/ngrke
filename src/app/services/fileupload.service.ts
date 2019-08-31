@@ -22,7 +22,7 @@ export class FileuploadService {
     return this.http.post(this.serviceURL, postBody);
   }
 
-  listFiles(userid: number): Observable<any> {
+  listFiles(userid: string): Observable<any> {
     return this.http.get(`${this.serviceURL}/${environment.env}/${userid}`);
   }
 

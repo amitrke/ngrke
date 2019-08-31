@@ -23,6 +23,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
 
   animal: string;
   name: string;
+  user: UserEntity;
 
   @Input() selectedTabIndex: number;
   @Output() navToTabIndex = new EventEmitter<number>();
@@ -37,6 +38,13 @@ export class ListpicsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.staticContentURL = environment.staticContentURL;
+
+    if (this.userService.cachedUser) {
+      this.user = this.userService.cachedUser;
+    }
+    this.userService.cachedUserChange.subscribe(value => {
+      this.user = value;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -50,10 +58,8 @@ export class ListpicsComponent implements OnInit, OnChanges {
   }
 
   updateFilesList() {
-    const user: UserEntity = this.userService.getCachedUser('user');
-    console.dir(user);
-    if (user != null) {
-      this.fileUploadService.listFiles(user[0]._id).subscribe(data => {
+    if (this.user != null) {
+      this.fileUploadService.listFiles(this.user._id).subscribe(data => {
         this.imageList = data;
         this.fileUploadService.imageListCache = data;
       }, error => {
@@ -66,13 +72,12 @@ export class ListpicsComponent implements OnInit, OnChanges {
 
   updatePhotogalleryList() {
     const searchCriteria = new PhotogalleryEntity(undefined);
-    const user: UserEntity = this.userService.getCachedUser('user');
-      searchCriteria.userId = user[0]._id;
-      this.photogalleryService.search(searchCriteria).subscribe(data => {
-        this.galleryList = data;
-      }, error => {
-        console.log(error);
-      });
+    searchCriteria.userId = this.user._id;
+    this.photogalleryService.search(searchCriteria).subscribe(data => {
+      this.galleryList = data;
+    }, error => {
+      console.log(error);
+    });
   }
 
   isGlry(imageURL: string) {
@@ -89,8 +94,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
     console.log('Gallery change ' + event.checked + ', Source=' + event.source.id);
     if (event.checked) { // Add to gallery
       const glry = new PhotogalleryEntity(event.source.id);
-      const user: UserEntity = this.userService.getCachedUser('user');
-      glry.userId = user[0]._id;
+      glry.userId = this.user._id;
       this.photogalleryService.save(glry).subscribe(data => {
         this.updatePhotogalleryList();
         this.snackBar.open('Added to photogallery', undefined, {
@@ -125,8 +129,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
   }
 
   onDelete(fileName: string) {
-    const user: UserEntity = this.userService.getCachedUser('user');
-    this.name = user[0].name;
+    this.name = this.user.name;
     this.animal = 'you want to delete this file';
 
     const dialogRef = this.dialog.open(CnfdlgComponent, {

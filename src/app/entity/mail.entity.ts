@@ -1,6 +1,6 @@
 export class MailEntity {
     constructor(
-        public fromUserId: number,
+        public fromUserId: string,
         public toEmail: string,
         public toName: string,
         public subject: string,

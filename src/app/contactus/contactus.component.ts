@@ -19,19 +19,25 @@ export class ContactusComponent implements OnInit {
   ) { }
 
   model = new MailEntity(undefined, 'admin@roorkee.org', 'Admin Roorkee.org', 'Contact us form submit', undefined, undefined);
+  user: UserEntity;
 
   ngOnInit() {
+    if (this.userService.cachedUser) {
+      this.user = this.userService.cachedUser;
+    }
+    this.userService.cachedUserChange.subscribe(value => {
+      this.user = value;
+    });
   }
 
   onSubmit() {
-    const user: UserEntity = this.userService.getCachedUser('user');
-    if (user == null) {
+    if (this.user == null) {
       this.snackBar.open('You must be logged in to send communication', undefined, {
         duration: 4000,
       });
       return;
     }
-    this.model.fromUserId = user[0]._id;
+    this.model.fromUserId = this.user._id;
     this.model.htmlBody = this.createMailBody();
     this.mailService.sendEmail(this.model).subscribe(data => {
       this.snackBar.open('Communication sent', undefined, {
@@ -50,11 +56,10 @@ export class ContactusComponent implements OnInit {
     });
   }
 
-  createMailBody() {
-    const user: UserEntity = this.userService.getCachedUser('user')[0];
+  createMailBody = () => {
     let content = '<h3>Contact Us communication sent from roorkee.org</h3>';
-    content += '<img src=\'' + user.getImageUrl() + '\'>';
-    content += '<p>From:' + user.name + '(' + user.getEmail() + ')</p>';
+    content += '<img src=\'' + this.user.getImageUrl() + '\'>';
+    content += '<p>From:' + this.user.name + '(' + this.user.getEmail() + ')</p>';
     content += '<p>' + this.model.textBody + '</p>';
     content += '<p>Local time:' + new Date() + '</p>';
     return content;

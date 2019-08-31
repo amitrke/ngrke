@@ -24,8 +24,15 @@ export class SubpicComponent implements OnInit {
   fileToUpload: File = null;
   firstFormGroup: FormGroup;
   fileUploaded = false;
+  user: UserEntity;
 
   ngOnInit() {
+    if (this.userService.cachedUser) {
+      this.user = this.userService.cachedUser;
+    }
+    this.userService.cachedUserChange.subscribe(value => {
+      this.user = value;
+    });
   }
 
   handleFileInput(files: FileList) {
@@ -33,9 +40,8 @@ export class SubpicComponent implements OnInit {
   }
 
   updateFilesList() {
-    if (this.userService.getCachedUser('idtoken') != null) {
-      const user: UserEntity = this.userService.getCachedUser('user')[0];
-      this.fileUploadService.listFiles(user.id).subscribe(data => {
+    if (this.user != null) {
+      this.fileUploadService.listFiles(this.user._id).subscribe(data => {
         this.fileUploadService.imageListCache = data;
       }, error => {
         console.log(error);
@@ -44,8 +50,7 @@ export class SubpicComponent implements OnInit {
   }
 
   async onSubmit(form: NgForm) {
-    const user: UserEntity = this.userService.getCachedUser('user')[0];
-    const fileName = `${environment.env}/up/usr/${user._id}/${this.fileToUpload.name}`;
+    const fileName = `${environment.env}/up/usr/${this.user._id}/${this.fileToUpload.name}`;
     const base64Image = await this.toBase64(this.fileToUpload);
     this.fileUploadService.postFile(base64Image, fileName, this.fileToUpload).subscribe(
       event => {

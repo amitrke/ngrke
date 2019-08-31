@@ -25,7 +25,7 @@ export class EditpostComponent implements OnInit, OnChanges {
     public snackBar: MatSnackBar
   ) { }
 
-  model = new ContentEntity(undefined, undefined, undefined, undefined, 100);
+  model = new ContentEntity(undefined, undefined, undefined, 100);
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedTabIndex'] && this.selectedTabIndex && this.selectedTabIndex === 2) {
@@ -36,22 +36,26 @@ export class EditpostComponent implements OnInit, OnChanges {
 
       if (this.contentService.editObject.id !== undefined) {
         this.model = this.contentService.editObject;
-        this.contentService.editObject = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
+        this.contentService.editObject = new ContentEntity(undefined, undefined, undefined, undefined);
       }
     }
   }
 
   ngOnInit() {
-    const user: UserEntity = this.userService.getCachedUser('user');
-    if (user != null) {
-      this.model.userId = user[0]._id;
+    if (this.userService.cachedUser) {
+      this.model.userId = this.userService.cachedUser._id;
       this.imageList = this.fileUploadService.imageListCache;
+    } else {
+      this.userService.cachedUserChange.subscribe(value => {
+        this.model.userId = value._id;
+        this.imageList = this.fileUploadService.imageListCache;
+      });
     }
   }
 
   onSubmit() {
     this.contentService.save(this.model).subscribe(data => {
-      this.model = new ContentEntity(undefined, undefined, undefined, undefined, 100);
+      this.model = new ContentEntity(undefined, undefined, undefined, 100);
       this.snackBar.open('Content uploaded', undefined, {
         duration: 2000,
       });

@@ -30,11 +30,17 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.userService.getCachedUser('idtoken') != null) {
-      this.loggedIn = true;
-      this.loggedInUser = this.userService.getCachedUser('user')[0];
-      this.userService.setCachedUser(this.loggedInUser);
+    if (this.userService.cachedUser) {
+      this.setUser(this.userService.cachedUser);
     }
+    this.userService.cachedUserChange.subscribe(value => {
+      this.setUser(value);
+    });
+  }
+
+  setUser = (user: UserEntity) => {
+    this.loggedIn = true;
+    this.loggedInUser = user;
   }
 
   onSelectedTabChange(event: MatTabChangeEvent) {

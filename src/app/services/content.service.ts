@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class ContentService extends BaseService<ContentEntity> {
 
-  public editObject = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
+  public editObject = new ContentEntity(undefined, undefined, undefined, undefined);
 
   constructor(private httpClient: HttpClient) {
     super(httpClient, 'articles');

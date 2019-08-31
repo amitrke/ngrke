@@ -5,6 +5,7 @@ export class BaseEntity {
     public id: number;
 
     public _id: string;
-    public userId: number;
+    public userId: string;
     public status: string;
+    public webid: string;
 }

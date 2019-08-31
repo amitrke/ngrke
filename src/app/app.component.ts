@@ -17,11 +17,17 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     console.log('appComponent: onInit');
-    this.user = this.userService.cachedUser;
-    this.userService.cachedUserChange.subscribe(value => {
-      console.log('appComponent: User Change detected');
-      this.user = value;
-    });
+    if (!this.user) {
+      if (this.userService.cachedUser) {
+        this.user = this.userService.cachedUser;
+      } else {
+        const userBrowserStore = this.userService.getCachedUser('user');
+        if (userBrowserStore) {
+          this.userService.setCachedUser(userBrowserStore);
+          this.user = userBrowserStore;
+        }
+      }
+    }
   }
 
 
