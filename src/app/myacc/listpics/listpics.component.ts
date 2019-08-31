@@ -73,11 +73,11 @@ export class ListpicsComponent implements OnInit, OnChanges {
   updatePhotogalleryList() {
     const searchCriteria = new PhotogalleryEntity(undefined);
     searchCriteria.userId = this.user._id;
-    this.photogalleryService.search(searchCriteria).subscribe(data => {
-      this.galleryList = data;
-    }, error => {
-      console.log(error);
-    });
+    // this.photogalleryService.search(searchCriteria).subscribe(data => {
+    //   this.galleryList = data;
+    // }, error => {
+    //   console.log(error);
+    // });
   }
 
   isGlry(imageURL: string) {

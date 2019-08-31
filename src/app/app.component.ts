@@ -25,6 +25,10 @@ export class AppComponent implements OnInit {
         if (userBrowserStore) {
           this.userService.setCachedUser(userBrowserStore);
           this.user = userBrowserStore;
+        } else {
+          this.userService.cachedUserChange.subscribe(value => {
+            this.user = value;
+          });
         }
       }
     }

@@ -5,7 +5,6 @@ import { catchError } from 'rxjs/operators';
 import { UserEntity } from '../entity/user.entity';
 import { BaseService } from './base.service';
 import { environment } from '../../environments/environment';
-import { AwsClient } from 'aws4fetch';
 import { AWSCredentials } from '../entity/awscredentials.entity';
 
 @Injectable()
@@ -16,38 +15,24 @@ export class UserService extends BaseService<UserEntity> {
                       '&WebIdentityToken=#TOKEN#&Version=2011-06-15';
 
   constructor(private httpClient: HttpClient) {
-    super(httpClient, 'users');
+    super(httpClient, 'User');
   }
 
   cachedUserChange: Subject<UserEntity> = new Subject<UserEntity>();
 
-  private awsClient: AwsClient;
-  private awsCredentials: AWSCredentials;
-
-  public setAWSCachedUser = async(accessKeyId: string, secretAccessKey: string, sessionToken: string, user: UserEntity) => {
+  public setAWSAPIKeys = async(accessKeyId: string, secretAccessKey: string, sessionToken: string) => {
     this.awsCredentials = new AWSCredentials(accessKeyId, secretAccessKey, sessionToken);
     localStorage.setItem('AccessKeyId', accessKeyId);
     localStorage.setItem('SecretAccessKey', secretAccessKey);
     localStorage.setItem('SessionToken', sessionToken);
-    localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('expiry', JSON.stringify(new Date().getTime()));
-    this.setCachedUser(user);
   }
 
   public setCachedUser = (user: UserEntity) => {
     this.cachedUser = user;
+    localStorage.setItem('user', JSON.stringify(user));
     console.log('userService: cachedUser updated');
     this.cachedUserChange.next(user);
-  }
-
-  public getAWSCachedUser(): AWSCredentials {
-    if (this.awsCredentials === undefined && localStorage.getItem('AccessKeyId')) {
-      console.log('Reading aws credentials from local storage');
-      this.awsCredentials.AccessKeyId = localStorage.getItem('AccessKeyId');
-      this.awsCredentials.SecretAccessKey = localStorage.getItem('SecretAccessKey');
-      this.awsCredentials.SessionToken = localStorage.getItem('SessionToken');
-    }
-    return this.awsCredentials;
   }
 
   public removeCachedUser() {
@@ -65,23 +50,6 @@ export class UserService extends BaseService<UserEntity> {
   public setAWSAuthKeys = async(idtoken: string) => {
     const keys = await this.getAWSAuthKeys(idtoken).toPromise();
 
-  }
-
-  private getAWSClient(): AwsClient {
-    if (this.awsClient === undefined) {
-      const awsCred = this.getAWSCachedUser();
-      this.awsClient = new AwsClient(
-        {
-          accessKeyId: awsCred.AccessKeyId,
-          secretAccessKey: awsCred.SecretAccessKey,
-          sessionToken: awsCred.SessionToken,
-          region: 'us-east-1',
-          'service': 'execute-api'
-        });
-      return this.awsClient;
-    } else {
-      return this.awsClient;
-    }
   }
 
   getAWSUser = async(user: UserEntity) => {
@@ -109,5 +77,22 @@ export class UserService extends BaseService<UserEntity> {
             .pipe(
               catchError(this.handleError)
             );
+  }
+
+  public search = async (entity: UserEntity): Promise<UserEntity[]> => {
+    const criteria = {
+      webid: environment.website,
+      email: ''
+    };
+
+    if (entity.getEmail()) {
+      criteria.email = entity.getEmail();
+    }
+
+    const res = await this.getAWSClient().fetch(
+      `${this.serviceURL}/q/${JSON.stringify(criteria)}`,
+        {}
+      );
+    return res.json();
   }
 }

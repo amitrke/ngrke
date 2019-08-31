@@ -4,11 +4,12 @@ import { Component,
   OnInit,
   ChangeDetectorRef
  } from '@angular/core';
-import { UserEntity } from '../entity/user.entity';
+import { UserEntity, UserSocial } from '../entity/user.entity';
 import { UserService } from '../services/user.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { FormControl } from '@angular/forms';
 import { GoogleSignInSuccess } from '../google-signin/google-signin.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -55,34 +56,44 @@ export class LoginComponent implements OnInit {
     const googleUser: gapi.auth2.GoogleUser = event.googleUser;
     console.log('idtoken=' + googleUser.getAuthResponse().id_token);
 
-    const user: UserEntity = UserEntity.instanceFromGoogle(googleUser);
-
     const keys = await this.userService.getAWSAuthKeys(googleUser.getAuthResponse().id_token).toPromise();
-    await this.userService.setAWSCachedUser(
+    await this.userService.setAWSAPIKeys(
       keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.AccessKeyId,
       keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SecretAccessKey,
-      keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SessionToken,
-      user
+      keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SessionToken
     );
-    const existingUser = await this.userService.getAWSUser(user);
 
-    if (existingUser) {
-      this.setLoggedInUserFlags(googleUser.getAuthResponse().id_token, existingUser);
-    } else {
-      const newUser = await this.userService.createAWSUser(user);
-      if (newUser) {
-        console.log('User should have been created by now');
-        this.setLoggedInUserFlags(googleUser.getAuthResponse().id_token, newUser);
+    try {
+      const social = new UserSocial(googleUser.getBasicProfile().getEmail(), undefined, undefined, undefined);
+      const socials = [];
+      socials.push(social);
+      const userSearchCriteria = new UserEntity(undefined, socials, environment.website, undefined, undefined, undefined);
+      const existingUser = await this.userService.search(userSearchCriteria);
+      if (existingUser && existingUser.length > 0) {
+        this.setLoggedInUserFlags(existingUser[0]);
       } else {
-        console.log('Error creating new user');
+        const googleUserEntity: UserEntity = UserEntity.instanceFromGoogle(googleUser);
+        await this.registerNewUser(googleUserEntity);
       }
+    } catch (err) {
+      console.error(`loginComponent: Error making API request to fetch user details ${err}`);
     }
   }
 
-  setLoggedInUserFlags = (idtoken: string, user: UserEntity) => {
+  private registerNewUser = async(user: UserEntity) => {
+    try {
+      const newUser = await this.userService.createAWSUser(user);
+      this.setLoggedInUserFlags(newUser);
+    } catch (err) {
+      console.error(`loginComponent: Error file registering user ${err}`);
+    }
+  }
+
+  setLoggedInUserFlags = (user: UserEntity) => {
     this.loggedInUser = user;
     this.loggedIn = true;
     this.loginEvent.emit(user);
     this.changeDetectorRef.detectChanges();
+    this.userService.setCachedUser(user);
   }
 }
