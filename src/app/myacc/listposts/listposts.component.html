@@ -1,6 +1,6 @@
 <mat-card *ngFor="let item of contentList" class="home-card">
     <mat-card-title>{{item.title}}</mat-card-title>
-    <img mat-card-image src="{{uploadServerURL}}/{{item.imageURL}}">
+    <img mat-card-image src="{{uploadServerURL}}{{item.images[0]}}">
     <mat-card-content>
             {{item.description}}
         </mat-card-content>

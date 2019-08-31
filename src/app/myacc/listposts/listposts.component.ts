@@ -32,7 +32,7 @@ export class ListpostsComponent implements OnInit, OnChanges  {
   }
 
   async ngOnInit() {
-    this.uploadServerURL = environment.uploadServerURL;
+    this.uploadServerURL = environment.staticContentURL;
     if (this.userService.cachedUser) {
       this.user = this.userService.cachedUser;
       await this.fetchData();
