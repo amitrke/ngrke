@@ -9,11 +9,11 @@
     </mat-form-field>
   
     <mat-form-field>
-      <textarea matInput id="fullText" required [(ngModel)]="model.fullText" name="fullText" placeholder="Body"></textarea>
+      <textarea matInput id="fulltext" required [(ngModel)]="model.fulltext" name="fulltext" placeholder="Body"></textarea>
     </mat-form-field>
   
     <mat-form-field>
-      <mat-select id="imageURL" required [(ngModel)]="model.imageURL" name="imageURL" placeholder="Image">
+      <mat-select id="imageURL" required [(ngModel)]="model.images" name="images" placeholder="Image">
         <mat-option *ngFor="let item of imageList" value="{{item}}">{{item.Key | splitAndGet:"/":4}}</mat-option>
       </mat-select>
     </mat-form-field>

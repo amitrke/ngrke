@@ -22,6 +22,7 @@ export class ListpostsComponent implements OnInit, OnChanges  {
 
   contentList: UserService[] = [];
   public uploadServerURL: string;
+  user: UserEntity;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedTabIndex'] && this.selectedTabIndex && this.selectedTabIndex === 3) {
@@ -30,11 +31,16 @@ export class ListpostsComponent implements OnInit, OnChanges  {
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.uploadServerURL = environment.uploadServerURL;
     if (this.userService.cachedUser) {
-      this.fetchData();
+      this.user = this.userService.cachedUser;
+      await this.fetchData();
     }
+    this.userService.cachedUserChange.subscribe(async (value) => {
+      this.user = value;
+      await this.fetchData();
+    });
   }
 
   onEditLink(editObject: ContentEntity) {
@@ -42,13 +48,14 @@ export class ListpostsComponent implements OnInit, OnChanges  {
     this.navToTabIndex.emit(2);
   }
 
-  fetchData() {
+  fetchData = async() => {
     const content = new ContentEntity(undefined, undefined, undefined, undefined);
-    const user: UserEntity = this.userService.cachedUser;
-    this.contentService.awsSearch(content).subscribe(data => {
-      this.contentList = data;
-    }, error => {
-      console.log(error);
-    });
+    content.userId = this.user._id;
+    content.webid = environment.website;
+    try {
+      this.contentList = await this.contentService.awsSearch(content).toPromise();
+    } catch (err) {
+      console.log(`listposts: error occured while doing a post search ${err}`);
+    }
   }
 }

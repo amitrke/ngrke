@@ -5,6 +5,7 @@ import { ContentEntity } from '../entity/content.entity';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserService } from '../services/user.service';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-home',
@@ -23,18 +24,21 @@ export class HomeComponent implements OnInit {
     private userService: UserService
   ) { }
 
-  ngOnInit() {
-    const searchCriteria = new ContentEntity(undefined, undefined, undefined, undefined);
-    searchCriteria.status = 'published-to-homepage';
-    this.contentService.awsSearch(searchCriteria).subscribe(data => {
-      this.contentList = data;
-    }, error => {
-        this.error = true;
-        console.error(error);
-    });
+  async ngOnInit() {
+    await this.fetchPosts();
     this.uploadServerURL = environment.staticContentURL;
   }
 
+  fetchPosts = async() => {
+    const searchCriteria = new ContentEntity(undefined, undefined, undefined, undefined);
+    searchCriteria.status = 'published';
+    searchCriteria.webid = environment.website;
+    try {
+      this.contentList = await this.contentService.awsSearch(searchCriteria).toPromise();
+    } catch (err) {
+      console.error(`homeComponent: unable to fetch homepage posts ${err}`);
+    }
+  }
   moreBtnClick = function (url: String) {
     this.router.navigateByUrl(url);
   };
