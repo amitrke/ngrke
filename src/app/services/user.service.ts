@@ -80,17 +80,8 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   public search = async (entity: UserEntity): Promise<UserEntity[]> => {
-    const criteria = {
-      webid: environment.website,
-      email: ''
-    };
-
-    if (entity.getEmail()) {
-      criteria.email = entity.getEmail();
-    }
-
     const res = await this.getAWSClient().fetch(
-      `${this.serviceURL}/q/${JSON.stringify(criteria)}`,
+      `${this.serviceURL}/q/{"webid":"${environment.website}","social.email":"${entity.getEmail()}"}`,
         {}
       );
     return res.json();
