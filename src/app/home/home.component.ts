@@ -14,7 +14,7 @@ import { async } from '@angular/core/testing';
 })
 export class HomeComponent implements OnInit {
 
-  contentList: [];
+  contentList: ContentEntity[];
   public uploadServerURL: string;
   public error: boolean;
 
@@ -30,11 +30,10 @@ export class HomeComponent implements OnInit {
   }
 
   fetchPosts = async() => {
-    const searchCriteria = new ContentEntity(undefined, undefined, undefined, undefined);
-    searchCriteria.status = 'published';
-    searchCriteria.webid = environment.website;
     try {
-      this.contentList = await this.contentService.awsSearch(searchCriteria).toPromise();
+      console.dir(this.contentList);
+      this.contentList = await this.contentService.getHomePosts();
+      this.error = false;
     } catch (err) {
       console.error(`homeComponent: unable to fetch homepage posts ${err}`);
     }

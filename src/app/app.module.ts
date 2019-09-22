@@ -39,7 +39,6 @@ import { CmsPageComponent } from './cms-page/cms-page.component';
 import { HomeComponent } from './home/home.component';
 import {ContentService} from './services/content.service';
 import { HttpClientModule } from '@angular/common/http';
-import {CdkTableModule} from '@angular/cdk/table';
 import { LoginComponent } from './login/login.component';
 import { UserService } from './services/user.service';
 import { FileuploadService } from './services/fileupload.service';
@@ -58,6 +57,8 @@ import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 import { ContactusComponent } from './contactus/contactus.component';
 import { CnfdlgComponent } from './cnfdlg/cnfdlg.component';
 import { PrivacyComponent } from './privacy/privacy.component';
+import { ApolloModule } from 'apollo-angular';
+import { HttpLinkModule } from 'apollo-angular-link-http';
 
 @NgModule({
   declarations: [
@@ -117,7 +118,9 @@ import { PrivacyComponent } from './privacy/privacy.component';
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ApolloModule,
+    HttpLinkModule
   ],
   providers: [
     ContentService, UserService, FileuploadService, PhotogalleryService,

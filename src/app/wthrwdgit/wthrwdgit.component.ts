@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 })
 export class WthrwdgitComponent implements OnInit {
 
-  private serviceURL = 'http://api.openweathermap.org/data/2.5/weather?id=1258044&APPID=f7af9edbf84cf616933e7bb4ef2820ca&units=metric';
+  private serviceURL = 'https://api.openweathermap.org/data/2.5/weather?id=1258044&APPID=f7af9edbf84cf616933e7bb4ef2820ca&units=metric';
 
   public dataAvailable;
 

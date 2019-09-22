@@ -10,6 +10,7 @@ export const environment = {
   awsServiceURL: 'https://api.aws.roorkee.org/dev/v1',
   awsFileServiceURL: 'https://api.aws.roorkee.org/dev/file',
   staticContentURL: 'https://www-static.aws.roorkee.org/dev',
+  graphqlServerURL: 'https://graphql.aws.roorkee.org/dev/graphql',
   website: 'rke-dev',
   build: '123',
   env: 'dev'
