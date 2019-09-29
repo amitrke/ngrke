@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserService } from '../services/user.service';
 import { async } from '@angular/core/testing';
+import { PubcacheService } from '../services/pubcache.service';
 
 @Component({
   selector: 'app-home',
@@ -14,18 +15,20 @@ import { async } from '@angular/core/testing';
 })
 export class HomeComponent implements OnInit {
 
-  contentList: ContentEntity[];
+  contentList: any;
   public uploadServerURL: string;
   public error: boolean;
 
   constructor(
     private router: Router,
     private contentService: ContentService,
-    private userService: UserService
+    private userService: UserService,
+    private pubCacheService: PubcacheService
   ) { }
 
   async ngOnInit() {
-    await this.fetchPosts();
+    this.contentList = this.pubCacheService.publicCache.home;
+    // await this.fetchPosts();
     this.uploadServerURL = environment.staticContentURL;
   }
 
