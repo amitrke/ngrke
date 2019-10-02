@@ -1,4 +1,4 @@
-<mat-card *ngFor="let item of fileUploadService.imageListCache" class="home-card">
+<mat-card *ngFor="let item of imageList" class="home-card">
   <mat-card-title>{{item.Key | splitAndGet:"/":4 | truncEllipsis:14}}</mat-card-title>
   <img mat-card-image src="{{staticContentURL}}/../{{item.Key}}">
   <mat-card-actions>

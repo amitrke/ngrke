@@ -16,10 +16,12 @@ export class ContentService extends BaseService<ContentEntity> {
 
   constructor(private httpClient: HttpClient, private apollo: Apollo, httpLink: HttpLink) {
     super(httpClient, 'articles');
-    apollo.create({
-      link: httpLink.create({ uri: environment.graphqlServerURL }),
-      cache: new InMemoryCache()
-    });
+    try {
+      apollo.create({
+        link: httpLink.create({ uri: environment.graphqlServerURL }),
+        cache: new InMemoryCache()
+      });
+    } catch {}
   }
 
   public getHomePosts = async (): Promise<ContentEntity[]> => {

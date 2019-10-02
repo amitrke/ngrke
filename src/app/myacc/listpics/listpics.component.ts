@@ -17,7 +17,7 @@ import { UserEntity } from '../../entity/user.entity';
 })
 export class ListpicsComponent implements OnInit, OnChanges {
 
-  public imageList: string[];
+  public imageList: {Key: string, ETag: string}[];
   public staticContentURL: string;
   public galleryList: PhotogalleryEntity[];
 
@@ -57,15 +57,13 @@ export class ListpicsComponent implements OnInit, OnChanges {
     }
   }
 
-  updateFilesList() {
+  private updateFilesList = async() => {
     if (this.user != null) {
-      this.fileUploadService.listFiles(this.user._id).subscribe(data => {
-        this.imageList = data;
-        this.fileUploadService.imageListCache = data;
-      }, error => {
-        console.log(error);
-      });
-
+      try {
+        this.imageList = await this.fileUploadService.listFiles(this.user._id);
+      } catch (err) {
+        console.error(err);
+      }
       this.updatePhotogalleryList();
     }
   }
