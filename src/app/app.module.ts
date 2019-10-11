@@ -57,8 +57,6 @@ import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 import { ContactusComponent } from './contactus/contactus.component';
 import { CnfdlgComponent } from './cnfdlg/cnfdlg.component';
 import { PrivacyComponent } from './privacy/privacy.component';
-import { ApolloModule } from 'apollo-angular';
-import { HttpLinkModule } from 'apollo-angular-link-http';
 
 @NgModule({
   declarations: [
@@ -118,9 +116,7 @@ import { HttpLinkModule } from 'apollo-angular-link-http';
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule,
-    ApolloModule,
-    HttpLinkModule
+    MatTooltipModule
   ],
   providers: [
     ContentService, UserService, FileuploadService, PhotogalleryService,
