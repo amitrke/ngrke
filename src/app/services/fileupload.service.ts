@@ -1,25 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Apollo } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
+import { BaseService } from './base.service';
+import { PhotogalleryEntity } from '../entity/photogallery.entity';
 
 @Injectable()
-export class FileuploadService {
+export class FileuploadService extends BaseService<PhotogalleryEntity> {
 
-  private serviceURL = environment.awsFileServiceURL;
+  // private serviceURL = environment.awsFileServiceURL;
   public imageListCache = [];
-
-  constructor(private apollo: Apollo, httpLink: HttpLink) {
-    try {
-      apollo.create({
-        link: httpLink.create({ uri: environment.graphqlServerURL }),
-        cache: new InMemoryCache()
-      });
-    } catch {}
+  constructor(http: HttpClient) {
+    super(http, undefined);
   }
 
   public postFile = async (base64data: any, fileName: string, file: File): Promise<{ETag: string}> => {
@@ -31,10 +24,11 @@ export class FileuploadService {
             }
           }
       `;
-      const response = await this.apollo.mutate<{ETag: string}>({
-        mutation: uploadGql
-      }).toPromise();
-      return response.data;
+      const response = this.doGqlPost(uploadGql);
+      // const response = await this.apollo.mutate<{ETag: string}>({
+      //   mutation: uploadGql
+      // }).toPromise();
+      return response;
     } catch (err) {
       console.error(JSON.stringify(err));
     }
@@ -42,14 +36,8 @@ export class FileuploadService {
 
   public listFiles = async (userid: string): Promise<{Key: string, ETag: string}[]> => {
     try {
-      const response = await this.apollo.query<{getFilesList: {Key: string, ETag: string}[]}>({
-        query: gql`{
-           getFilesList(user:"${userid}", env: "${environment.env}"){
-            ETag,
-            Key
-          }
-      }`
-      }).toPromise();
+      const reqBody = `{ "query": "{ getFilesList(user: \\\"${userid}\\\", env:\\\"${environment.env}\\\") { Key, ETag  } }" }`;
+      const response = await this.doGqlPost(reqBody);
       return response.data.getFilesList;
     } catch (err) {
       console.error(JSON.stringify(err));

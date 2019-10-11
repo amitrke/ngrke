@@ -5,12 +5,16 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BaseEntity } from '../entity/base.entity';
 import { UserEntity } from '../entity/user.entity';
-import { AwsClient } from 'aws4fetch';
+import { AwsClient, AwsV4Signer } from 'aws4fetch';
 import { AWSCredentials } from '../entity/awscredentials.entity';
 
 export class BaseService<T extends BaseEntity> {
 
+  /*
+   * Deprecated.
+   */
   protected serviceURL: string;
+
   public cachedUser: UserEntity;
   private awsClient: AwsClient;
   protected awsCredentials: AWSCredentials;
@@ -24,9 +28,11 @@ export class BaseService<T extends BaseEntity> {
   protected getAWSCachedUser = (): AWSCredentials => {
     if (this.awsCredentials === undefined && localStorage.getItem('AccessKeyId')) {
       console.log('Reading aws credentials from local storage');
-      this.awsCredentials.AccessKeyId = localStorage.getItem('AccessKeyId');
-      this.awsCredentials.SecretAccessKey = localStorage.getItem('SecretAccessKey');
-      this.awsCredentials.SessionToken = localStorage.getItem('SessionToken');
+      this.awsCredentials = new AWSCredentials(
+        localStorage.getItem('AccessKeyId'),
+        localStorage.getItem('SecretAccessKey'),
+        localStorage.getItem('SessionToken')
+      );
     }
     return this.awsCredentials;
   }
@@ -46,6 +52,20 @@ export class BaseService<T extends BaseEntity> {
     } else {
       return this.awsClient;
     }
+  }
+
+  protected getAwsV4Signer = (url: string, method: string, datetime: string): AwsV4Signer => {
+    const awsCred = this.getAWSCachedUser();
+    return new AwsV4Signer(
+      {
+        url: url,
+        datetime: datetime,
+        accessKeyId: awsCred.AccessKeyId,
+        secretAccessKey: awsCred.SecretAccessKey,
+        sessionToken: awsCred.SessionToken,
+        region: 'us-east-1',
+        'service': 'execute-api'
+      });
   }
 
   public get(id: String): Observable<any> {
@@ -91,12 +111,30 @@ export class BaseService<T extends BaseEntity> {
         );
   }
 
+  protected doGqlPost = async(body: string): Promise<any> => {
+    try {
+      const resp = await this.getAWSClient().fetch(
+        environment.graphqlServerURL, {
+          method: 'POST',
+          headers: {'Accept': "application/json"},
+          body: body
+        });
+      return resp.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  /**
+   * @deprecated
+   */
   protected doPost(url: string, entity: T): Observable<any> {
-      let idtoken = this.getCachedUser('idtoken');
-      idtoken = idtoken != null ? idtoken : '';
-      return this.http.post(url, entity, { headers: {'idtoken': idtoken}}).pipe(
-          catchError(this.handleError)
-      );
+    console.warn('Calling deprecated function!');
+    let idtoken = this.getCachedUser('idtoken');
+    idtoken = idtoken != null ? idtoken : '';
+    return this.http.post(url, entity, { headers: {'idtoken': idtoken}}).pipe(
+        catchError(this.handleError)
+    );
   }
 
   protected handleError(error: HttpErrorResponse) {
