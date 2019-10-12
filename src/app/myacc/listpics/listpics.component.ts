@@ -130,7 +130,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
     });
   }
 
-  onDelete(fileName: string) {
+  async onDelete(fileName: any) {
     this.name = this.user.name;
     this.animal = 'you want to delete this file';
 
@@ -139,15 +139,16 @@ export class ListpicsComponent implements OnInit, OnChanges {
       data: {name: this.name, animal: this.animal}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       console.log('The dialog was closed' + result);
       this.animal = result;
       if (result === 'yes') {
-        this.fileUploadService.delete(fileName).subscribe(data => {
+        try {
+          const resp = await this.fileUploadService.deleteFiles(fileName.Key);
           this.updateFilesList();
-        }, error => {
-          console.log(error);
-        });
+        } catch (err) {
+          console.error(err);
+        }
       }
     });
   }

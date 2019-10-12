@@ -45,6 +45,17 @@ export class FileuploadService extends BaseService<PhotogalleryEntity> {
     return this.doGqlPost(gqlQuery);
   }
 
+  public deleteFiles = async (key: string): Promise<any> => {
+    const deleteMutation = mutation({
+      operation: 'deleteFile',
+      variables: {
+        id: {value: key, required: true}
+      },
+      fields: ['deleteMarker']
+    });
+    return this.doGqlPost(deleteMutation);
+  }
+
   delete(filename: string): Observable<any> {
     /*
     this.imageListCache = [];
