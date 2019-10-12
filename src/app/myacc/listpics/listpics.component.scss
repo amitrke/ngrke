@@ -2,4 +2,8 @@
     width: 180px;
     height: 220px;
     float: left;
+
+    .mat-card-image {
+        max-height: 150px;
+    }
 }

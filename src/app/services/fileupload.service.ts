@@ -11,6 +11,7 @@ import { query, mutation } from 'gql-query-builder';
 export class FileuploadService extends BaseService<PhotogalleryEntity> {
 
   public imageListCache = [];
+
   constructor(http: HttpClient) {
     super(http, undefined);
   }
@@ -25,6 +26,7 @@ export class FileuploadService extends BaseService<PhotogalleryEntity> {
         },
         fields: ['ETag']
       });
+      this.imageListCache = [];
       return this.doGqlPost(uploadMutation);
     } catch (err) {
       console.error(JSON.stringify(err));
