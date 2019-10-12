@@ -60,7 +60,8 @@ export class ListpicsComponent implements OnInit, OnChanges {
   private updateFilesList = async() => {
     if (this.user != null) {
       try {
-        this.imageList = await this.fileUploadService.listFiles(this.user._id);
+        const resp = await this.fileUploadService.listFiles(this.user._id);
+        this.imageList = resp.data.getFilesList;
       } catch (err) {
         console.error(err);
       }

@@ -5,43 +5,42 @@ import { environment } from '../../environments/environment';
 import gql from 'graphql-tag';
 import { BaseService } from './base.service';
 import { PhotogalleryEntity } from '../entity/photogallery.entity';
+import { query, mutation } from 'gql-query-builder';
 
 @Injectable()
 export class FileuploadService extends BaseService<PhotogalleryEntity> {
 
-  // private serviceURL = environment.awsFileServiceURL;
   public imageListCache = [];
   constructor(http: HttpClient) {
     super(http, undefined);
   }
 
-  public postFile = async (base64data: any, fileName: string, file: File): Promise<{ETag: string}> => {
+  public postFile = async (base64data: any, fileName: string, file: File): Promise<any> => {
     try {
-      const uploadGql = gql`
-          mutation uploadFile {
-            uploadFile(fileData:"${base64data}", name: "${fileName}"){
-              ETag
-            }
-          }
-      `;
-      const response = this.doGqlPost(uploadGql);
-      // const response = await this.apollo.mutate<{ETag: string}>({
-      //   mutation: uploadGql
-      // }).toPromise();
-      return response;
+      const uploadMutation = mutation({
+        operation: 'uploadFile',
+        variables: {
+          fileData: {value: base64data, required: true},
+          name: {value: fileName, required: true}
+        },
+        fields: ['ETag']
+      });
+      return this.doGqlPost(uploadMutation);
     } catch (err) {
       console.error(JSON.stringify(err));
     }
   }
 
-  public listFiles = async (userid: string): Promise<{Key: string, ETag: string}[]> => {
-    try {
-      const reqBody = `{ "query": "{ getFilesList(user: \\\"${userid}\\\", env:\\\"${environment.env}\\\") { Key, ETag  } }" }`;
-      const response = await this.doGqlPost(reqBody);
-      return response.data.getFilesList;
-    } catch (err) {
-      console.error(JSON.stringify(err));
-    }
+  public listFiles = async (userid: string): Promise<any> => {
+    const gqlQuery = query({
+      operation: 'getFilesList',
+      variables: {
+        user: {value: userid, required: true},
+        env: {value: environment.env, required: true}
+      },
+      fields: ['Key', 'ETag']
+    });
+    return this.doGqlPost(gqlQuery);
   }
 
   delete(filename: string): Observable<any> {

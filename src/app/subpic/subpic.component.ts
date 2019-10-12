@@ -54,12 +54,22 @@ export class SubpicComponent implements OnInit {
     const base64Image = await this.toBase64(this.fileToUpload);
 
     try {
-      await this.fileUploadService.postFile(base64Image, fileName, this.fileToUpload);
-      this.snackBar.open('Image uploaded', undefined, {
-        duration: 2000,
-      });
-      this.navToTabIndex.emit(1);
+      const response = await this.fileUploadService.postFile(base64Image, fileName, this.fileToUpload);
+      if (response && response.data) {
+        this.snackBar.open('Image uploaded', undefined, {
+          duration: 3000,
+        });
+        this.navToTabIndex.emit(1);
+      } else {
+        this.snackBar.open(`Image upload failed:${response.errors[0].message}`, undefined, {
+          duration: 6000,
+        });
+        console.error(response);
+      }
     } catch (err) {
+      this.snackBar.open('Image upload failed', undefined, {
+        duration: 6000,
+      });
       console.error(err);
     }
   }

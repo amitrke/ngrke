@@ -111,17 +111,18 @@ export class BaseService<T extends BaseEntity> {
         );
   }
 
-  protected doGqlPost = async(body: string): Promise<any> => {
+  protected doGqlPost = async(gqlRequest: {variables: any, query: string}): Promise<any> => {
     try {
       const resp = await this.getAWSClient().fetch(
         environment.graphqlServerURL, {
           method: 'POST',
-          headers: {'Accept': "application/json"},
-          body: body
+          headers: {'Accept': 'application/json'},
+          body: JSON.stringify(gqlRequest)
         });
       return resp.json();
     } catch (err) {
       console.error(err);
+      throw err;
     }
   }
 
