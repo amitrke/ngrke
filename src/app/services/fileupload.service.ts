@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import gql from 'graphql-tag';
 import { BaseService } from './base.service';
 import { PhotogalleryEntity } from '../entity/photogallery.entity';
 import { query, mutation } from 'gql-query-builder';
