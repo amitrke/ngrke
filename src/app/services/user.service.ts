@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserEntity } from '../entity/user.entity';
@@ -20,12 +20,20 @@ export class UserService extends BaseService<UserEntity> {
 
   cachedUserChange: Subject<UserEntity> = new Subject<UserEntity>();
 
+  /**
+   * @deprecated
+   */
   public setAWSAPIKeys = async(accessKeyId: string, secretAccessKey: string, sessionToken: string) => {
+    console.warn('Calling deprecated function!');
     this.awsCredentials = new AWSCredentials(accessKeyId, secretAccessKey, sessionToken);
     localStorage.setItem('AccessKeyId', accessKeyId);
     localStorage.setItem('SecretAccessKey', secretAccessKey);
     localStorage.setItem('SessionToken', sessionToken);
     localStorage.setItem('expiry', JSON.stringify(new Date().getTime()));
+  }
+
+  public setApiToken = async(token: string) => {
+    localStorage.setItem('ApiToken', token);
   }
 
   public setCachedUser = (user: UserEntity) => {
@@ -39,9 +47,21 @@ export class UserService extends BaseService<UserEntity> {
     localStorage.clear();
   }
 
+  /**
+   * @deprecated
+   */
   public getAWSAuthKeys(idtoken: string): Observable<any> {
+    console.warn('Calling deprecated function!');
     const awsAuth = this.awsAuthURL.replace('#TOKEN#', idtoken);
     return this.httpClient.get(awsAuth)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  public getAuthToken = (idtoken: string): Observable<any> => {
+    const headers = new HttpHeaders({'Authorization':idtoken});
+    return this.httpClient.post(`${environment.graphqlServerURL}/../login`, "", {headers: headers})
     .pipe(
       catchError(this.handleError)
     );
@@ -80,6 +100,7 @@ export class UserService extends BaseService<UserEntity> {
   }
 
   public search = async (entity: UserEntity): Promise<UserEntity[]> => {
+    
     const res = await this.getAWSClient().fetch(
       `${this.serviceURL}/q/{"webid":"${environment.website}","social.email":"${entity.getEmail()}"}`,
         {}

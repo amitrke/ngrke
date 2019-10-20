@@ -1,5 +1,5 @@
 import { environment } from '../../environments/environment';
-import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { HttpErrorResponse, HttpClient, HttpHeaders } from '@angular/common/http';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -25,7 +25,11 @@ export class BaseService<T extends BaseEntity> {
           this.serviceURL = `${environment.awsServiceURL}/${service}`;
   }
 
+  /**
+   * @deprecated
+   */
   protected getAWSCachedUser = (): AWSCredentials => {
+    console.warn('Calling deprecated function!');
     if (this.awsCredentials === undefined && localStorage.getItem('AccessKeyId')) {
       console.log('Reading aws credentials from local storage');
       this.awsCredentials = new AWSCredentials(
@@ -37,7 +41,11 @@ export class BaseService<T extends BaseEntity> {
     return this.awsCredentials;
   }
 
+  /**
+   * @deprecated
+   */
   protected getAWSClient = (): AwsClient => {
+    console.warn('Calling deprecated function!');
     if (this.awsClient === undefined) {
       const awsCred = this.getAWSCachedUser();
       this.awsClient = new AwsClient(
@@ -54,7 +62,11 @@ export class BaseService<T extends BaseEntity> {
     }
   }
 
+  /**
+   * @deprecated
+   */
   protected getAwsV4Signer = (url: string, method: string, datetime: string): AwsV4Signer => {
+    console.warn('Calling deprecated function!');
     const awsCred = this.getAWSCachedUser();
     return new AwsV4Signer(
       {
@@ -112,14 +124,15 @@ export class BaseService<T extends BaseEntity> {
   }
 
   protected doGqlPost = async(gqlRequest: {variables: any, query: string}): Promise<any> => {
+    const apiToken = localStorage.getItem('ApiToken');
+    const headers = new HttpHeaders({'Authorization': apiToken, 'Accept': 'application/json'});
     try {
-      const resp = await this.getAWSClient().fetch(
+      const resp = await this.http.post(
         environment.graphqlServerURL, {
-          method: 'POST',
-          headers: {'Accept': 'application/json'},
+          headers: headers,
           body: JSON.stringify(gqlRequest)
         });
-      return resp.json();
+      return resp;
     } catch (err) {
       console.error(err);
       throw err;

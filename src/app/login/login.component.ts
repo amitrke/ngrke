@@ -55,13 +55,8 @@ export class LoginComponent implements OnInit {
   onGoogleSignInSuccess = async(event: GoogleSignInSuccess) => {
     const googleUser: gapi.auth2.GoogleUser = event.googleUser;
     console.log('idtoken=' + googleUser.getAuthResponse().id_token);
-
-    const keys = await this.userService.getAWSAuthKeys(googleUser.getAuthResponse().id_token).toPromise();
-    await this.userService.setAWSAPIKeys(
-      keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.AccessKeyId,
-      keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SecretAccessKey,
-      keys.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SessionToken
-    );
+    const authToken = await this.userService.getAuthToken(googleUser.getAuthResponse().id_token).toPromise();
+    await this.userService.setApiToken(authToken.token);
 
     try {
       const social = new UserSocial(googleUser.getBasicProfile().getEmail(), undefined, undefined, undefined);
