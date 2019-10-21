@@ -63,9 +63,9 @@ export class LoginComponent implements OnInit {
       const socials = [];
       socials.push(social);
       const userSearchCriteria = new UserEntity(undefined, socials, environment.website, undefined, undefined, undefined);
-      const existingUser = await this.userService.search(userSearchCriteria);
-      if (existingUser && existingUser.length > 0) {
-        this.setLoggedInUserFlags(existingUser[0]);
+      const existingUserResp = await this.userService.search(userSearchCriteria);
+      if (existingUserResp && existingUserResp.data.getUser) {
+        this.setLoggedInUserFlags(existingUserResp.data.getUser);
       } else {
         const googleUserEntity: UserEntity = UserEntity.instanceFromGoogle(googleUser);
         await this.registerNewUser(googleUserEntity);

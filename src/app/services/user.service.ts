@@ -107,7 +107,7 @@ export class UserService extends BaseService<UserEntity> {
         email: {value: entity.getEmail(), required: true},
         webid: {value: environment.website, required: true}
       },
-      fields: ['id', 'name']
+      fields: ['id', 'name', {'social': ['email', 'type', 'profilePic']}]
     });
     return this.doGqlPost(gqlQuery);
   }
