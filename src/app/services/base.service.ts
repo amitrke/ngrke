@@ -125,14 +125,12 @@ export class BaseService<T extends BaseEntity> {
 
   protected doGqlPost = async(gqlRequest: {variables: any, query: string}): Promise<any> => {
     const apiToken = localStorage.getItem('ApiToken');
-    const headers = new HttpHeaders({'Authorization': apiToken, 'Accept': 'application/json'});
     try {
-      const resp = await this.http.post(
-        environment.graphqlServerURL, {
-          headers: headers,
-          body: JSON.stringify(gqlRequest)
-        });
-      return resp;
+      return this.http.post(
+        environment.graphqlServerURL,
+        JSON.stringify(gqlRequest), {
+          headers: {'Authorization': apiToken}
+        }).toPromise();
     } catch (err) {
       console.error(err);
       throw err;

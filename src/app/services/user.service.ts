@@ -6,6 +6,7 @@ import { UserEntity } from '../entity/user.entity';
 import { BaseService } from './base.service';
 import { environment } from '../../environments/environment';
 import { AWSCredentials } from '../entity/awscredentials.entity';
+import { query } from 'gql-query-builder';
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
@@ -99,12 +100,15 @@ export class UserService extends BaseService<UserEntity> {
             );
   }
 
-  public search = async (entity: UserEntity): Promise<UserEntity[]> => {
-    
-    const res = await this.getAWSClient().fetch(
-      `${this.serviceURL}/q/{"webid":"${environment.website}","social.email":"${entity.getEmail()}"}`,
-        {}
-      );
-    return res.json();
+  public search = async (entity: UserEntity): Promise<any> => {
+    const gqlQuery = query({
+      operation: 'getUser',
+      variables: {
+        email: {value: entity.getEmail(), required: true},
+        webid: {value: environment.website, required: true}
+      },
+      fields: ['id', 'name']
+    });
+    return this.doGqlPost(gqlQuery);
   }
 }
