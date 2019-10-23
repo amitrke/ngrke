@@ -61,7 +61,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
     if (this.user != null) {
       try {
         if (!this.fileUploadService.imageListCache || this.fileUploadService.imageListCache.length < 1) {
-          const resp = await this.fileUploadService.listFiles(this.user._id);
+          const resp = await this.fileUploadService.listFiles(this.user.id);
           this.fileUploadService.imageListCache = resp.data.getFilesList;
         }
         this.imageList = this.fileUploadService.imageListCache;
@@ -74,7 +74,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
 
   updatePhotogalleryList() {
     const searchCriteria = new PhotogalleryEntity(undefined);
-    searchCriteria.userId = this.user._id;
+    searchCriteria.userId = this.user.id;
     // this.photogalleryService.search(searchCriteria).subscribe(data => {
     //   this.galleryList = data;
     // }, error => {
@@ -96,7 +96,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
     console.log('Gallery change ' + event.checked + ', Source=' + event.source.id);
     if (event.checked) { // Add to gallery
       const glry = new PhotogalleryEntity(event.source.id);
-      glry.userId = this.user._id;
+      glry.userId = this.user.id;
       this.photogalleryService.save(glry).subscribe(data => {
         this.updatePhotogalleryList();
         this.snackBar.open('Added to photogallery', undefined, {

@@ -129,7 +129,7 @@ export class BaseService<T extends BaseEntity> {
       return this.http.post(
         environment.graphqlServerURL,
         JSON.stringify(gqlRequest), {
-          headers: {'Authorization': apiToken}
+          headers: {'Authorization': apiToken, 'webid': environment.website}
         }).toPromise();
     } catch (err) {
       console.error(err);
