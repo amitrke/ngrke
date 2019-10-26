@@ -1,5 +1,6 @@
 import { BaseEntity } from './base.entity';
 import { environment } from '../../environments/environment';
+import { ContentEntity } from './content.entity';
 
 export class UserSocial {
 
@@ -11,6 +12,9 @@ export class UserSocial {
     ) {}
 }
 export class UserEntity extends BaseEntity {
+
+    public files: {Key: string, ETag: string}[];
+    public posts: ContentEntity[];
 
     constructor(
         public type: string,

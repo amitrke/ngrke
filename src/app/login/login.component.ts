@@ -58,37 +58,27 @@ export class LoginComponent implements OnInit {
     const authToken = await this.userService.getAuthToken(googleUser.getAuthResponse().id_token).toPromise();
     await this.userService.setApiToken(authToken.token);
 
-    try {
-      const social = new UserSocial(googleUser.getBasicProfile().getEmail(), undefined, undefined, undefined);
-      const socials = [];
-      socials.push(social);
-      const userSearchCriteria = new UserEntity(undefined, socials, environment.website, undefined, undefined, undefined);
-      const existingUserResp = await this.userService.search(userSearchCriteria);
-      if (existingUserResp && existingUserResp.data.getUser) {
-        this.setLoggedInUserFlags(existingUserResp.data.getUser);
-      } else {
-        const googleUserEntity: UserEntity = UserEntity.instanceFromGoogle(googleUser);
-        await this.registerNewUser(googleUserEntity);
-      }
-    } catch (err) {
-      console.error(`loginComponent: Error making API request to fetch user details ${err}`);
-    }
+    const social = new UserSocial(googleUser.getBasicProfile().getEmail(),
+            undefined, undefined, googleUser.getBasicProfile().getImageUrl());
+    const socials = [];
+    socials.push(social);
+
+    await this.setLoggedInUser(new UserEntity(
+      'Unknown', socials, environment.website, googleUser.getBasicProfile().getName(),
+      new Date(), new Date()
+    ));
   }
 
-  private registerNewUser = async(user: UserEntity) => {
-    try {
-      const newUser = await this.userService.createAWSUser(user);
-      this.setLoggedInUserFlags(newUser);
-    } catch (err) {
-      console.error(`loginComponent: Error file registering user ${err}`);
-    }
-  }
-
-  setLoggedInUserFlags = (user: UserEntity) => {
+  private setLoggedInUser = async (user: UserEntity) => {
     this.loggedInUser = user;
     this.loggedIn = true;
     this.loginEvent.emit(user);
     this.changeDetectorRef.detectChanges();
+    const currUserGqlResp = await this.userService.getCurrUser();
+    const currUser: UserEntity = currUserGqlResp.data.user;
+    user.files = currUser.files;
+    user.posts = currUser.posts;
+    console.log(currUser);
     this.userService.setCachedUser(user);
   }
 }

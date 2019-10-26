@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { BaseService } from './base.service';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { query } from 'gql-query-builder';
 
 @Injectable()
 export class ContentService extends BaseService<ContentEntity> {
@@ -19,11 +20,27 @@ export class ContentService extends BaseService<ContentEntity> {
     return undefined;
   }
 
+  public getMyPosts = async (): Promise<any> => {
+    const gqlQuery = query({
+      operation: 'myPosts',
+      fields: ['id', 'title', 'description', 'images']
+    });
+    return this.doGqlPost(gqlQuery);
+  }
+
+  /**
+   * @deprecated
+   */
   public awsSearch(entity: ContentEntity): Observable<any> {
+    console.warn('Calling deprecated function!');
     return this.doAwsGet(`${environment.awsServiceURL}/Post/q/${JSON.stringify(entity)}`);
   }
 
+  /**
+   * @deprecated
+   */
   public awsGet(id: String): Observable<any> {
+    console.warn('Calling deprecated function!');
     return this.doAwsGet(`${environment.awsServiceURL}/Post/${id}`);
   }
 }

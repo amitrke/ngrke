@@ -20,7 +20,7 @@ export class ListpostsComponent implements OnInit, OnChanges  {
   @Input() selectedTabIndex: number;
   @Output() navToTabIndex = new EventEmitter<number>();
 
-  contentList: UserService[] = [];
+  contentList: ContentEntity[] = [];
   public uploadServerURL: string;
   user: UserEntity;
 
@@ -49,13 +49,6 @@ export class ListpostsComponent implements OnInit, OnChanges  {
   }
 
   fetchData = async() => {
-    const content = new ContentEntity(undefined, undefined, undefined, undefined);
-    content.userId = this.user._id;
-    content.webid = environment.website;
-    try {
-      this.contentList = await this.contentService.awsSearch(content).toPromise();
-    } catch (err) {
-      console.log(`listposts: error occured while doing a post search ${err}`);
-    }
+    this.contentList = this.userService.cachedUser.posts;
   }
 }

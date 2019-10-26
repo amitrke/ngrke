@@ -111,4 +111,12 @@ export class UserService extends BaseService<UserEntity> {
     });
     return this.doGqlPost(gqlQuery);
   }
+
+  public getCurrUser = async (): Promise<any> => {
+    const gqlQuery = query({
+      operation: 'user',
+      fields: ['id', {'social': ['email', 'type']}, {'files': ['Key', 'ETag']}, {'posts': ['id', 'title', 'images', 'description']}]
+    });
+    return this.doGqlPost(gqlQuery);
+  }
 }
