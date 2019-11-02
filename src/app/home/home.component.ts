@@ -5,6 +5,8 @@ import { ContentEntity } from '../entity/content.entity';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserService } from '../services/user.service';
+import { async } from '@angular/core/testing';
+import { PubcacheService } from '../services/pubcache.service';
 
 @Component({
   selector: 'app-home',
@@ -13,39 +15,32 @@ import { UserService } from '../services/user.service';
 })
 export class HomeComponent implements OnInit {
 
-  contentList: ContentEntity[];
+  contentList: any;
   public uploadServerURL: string;
   public error: boolean;
 
   constructor(
     private router: Router,
     private contentService: ContentService,
-    private userService: UserService
+    private userService: UserService,
+    private pubCacheService: PubcacheService
   ) { }
 
-  ngOnInit() {
-    if (this.userService.getCachedUser('idtoken') != null) {
-      this.userService.getCachedUser('user');
-    }
-
-    const searchCriteria = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
-    searchCriteria.status = 'published-to-homepage';
-    this.contentService.search(searchCriteria).subscribe(data => {
-      this.contentList = data;
-      this.contentList.sort((obj1, obj2) => {
-        if (obj1.priority < obj2.priority) {
-          return -1;
-        } else {
-          return 1;
-        }
-      });
-    }, error => {
-        this.error = true;
-        console.error(error);
-    });
-    this.uploadServerURL = environment.uploadServerURL;
+  async ngOnInit() {
+    this.contentList = this.pubCacheService.publicCache.home;
+    // await this.fetchPosts();
+    this.uploadServerURL = environment.staticContentURL;
   }
 
+  fetchPosts = async() => {
+    try {
+      console.dir(this.contentList);
+      this.contentList = await this.contentService.getHomePosts();
+      this.error = false;
+    } catch (err) {
+      console.error(`homeComponent: unable to fetch homepage posts ${err}`);
+    }
+  }
   moreBtnClick = function (url: String) {
     this.router.navigateByUrl(url);
   };

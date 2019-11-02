@@ -84,6 +84,7 @@ jobs:
           paths:
             - node_modules
           key: ngrke-aws-{{ .Environment.CIRCLE_BRANCH }}-{{ checksum "package.json" }}
+      - run: yarn run pubCache
       - run: yarn builddev
       - run: mkdir bucket && echo "lorum ipsum" > bucket/build_asset.txt
       - run:

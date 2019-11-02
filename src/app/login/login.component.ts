@@ -4,11 +4,12 @@ import { Component,
   OnInit,
   ChangeDetectorRef
  } from '@angular/core';
-import { UserEntity } from '../entity/user.entity';
+import { UserEntity, UserSocial } from '../entity/user.entity';
 import { UserService } from '../services/user.service';
-import { MatTabChangeEvent } from '@angular/material';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { FormControl } from '@angular/forms';
 import { GoogleSignInSuccess } from '../google-signin/google-signin.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -30,10 +31,17 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.userService.getCachedUser('idtoken') != null) {
-      this.loggedIn = true;
-      this.loggedInUser = this.userService.getCachedUser('user');
+    if (this.userService.cachedUser) {
+      this.setUser(this.userService.cachedUser);
     }
+    this.userService.cachedUserChange.subscribe(value => {
+      this.setUser(value);
+    });
+  }
+
+  setUser = (user: UserEntity) => {
+    this.loggedIn = true;
+    this.loggedInUser = user;
   }
 
   onSelectedTabChange(event: MatTabChangeEvent) {
@@ -44,47 +52,33 @@ export class LoginComponent implements OnInit {
     this.selectedTab.setValue(event);
   }
 
-  onGoogleSignInSuccess(event: GoogleSignInSuccess) {
+  onGoogleSignInSuccess = async(event: GoogleSignInSuccess) => {
     const googleUser: gapi.auth2.GoogleUser = event.googleUser;
-    const id: string = googleUser.getId();
-    const profile: gapi.auth2.BasicProfile = googleUser.getBasicProfile();
     console.log('idtoken=' + googleUser.getAuthResponse().id_token);
-    const user: UserEntity = new UserEntity(id, profile.getName(),
-           profile.getEmail(), profile.getImageUrl(), undefined);
-    this.userService.getAWSAuthKeys(googleUser.getAuthResponse().id_token).subscribe(value => {
-      this.userService.setAWSCachedUser(
-            value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.AccessKeyId,
-            value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SecretAccessKey,
-            value.AssumeRoleWithWebIdentityResponse.AssumeRoleWithWebIdentityResult.Credentials.SessionToken,
-            user);
+    const authToken = await this.userService.getAuthToken(googleUser.getAuthResponse().id_token).toPromise();
+    await this.userService.setApiToken(authToken.token);
 
-      this.userService.getAWSUser(user).then(value => {
-        console.dir(value);
-      },
-      error => {
-        console.log('Error AWS getting user');
-      });
+    const social = new UserSocial(googleUser.getBasicProfile().getEmail(),
+            undefined, undefined, googleUser.getBasicProfile().getImageUrl());
+    const socials = [];
+    socials.push(social);
 
-
-    }, error => {
-      console.log('Error AWS token stuff');
-    });
-
-    this.userService.tokensignin(googleUser.getAuthResponse().id_token).subscribe(value => {
-      const user: UserEntity = new UserEntity(id, profile.getName(),
-           profile.getEmail(), profile.getImageUrl(), undefined);
-           user.id = Number.parseInt(value.response);
-      this.setLoggedInUserFlags(googleUser.getAuthResponse().id_token, user);
-    }, error => {
-      console.log('Error token stuff');
-    });
+    await this.setLoggedInUser(new UserEntity(
+      'Unknown', socials, environment.website, googleUser.getBasicProfile().getName(),
+      new Date(), new Date()
+    ));
   }
 
-  setLoggedInUserFlags(idtoken: string, user: UserEntity) {
-    this.userService.setCachedUser(idtoken, user);
+  private setLoggedInUser = async (user: UserEntity) => {
     this.loggedInUser = user;
     this.loggedIn = true;
     this.loginEvent.emit(user);
     this.changeDetectorRef.detectChanges();
+    const currUserGqlResp = await this.userService.getCurrUser();
+    const currUser: UserEntity = currUserGqlResp.data.user;
+    user.files = currUser.files;
+    user.posts = currUser.posts;
+    console.log(currUser);
+    this.userService.setCachedUser(user);
   }
 }

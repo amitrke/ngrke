@@ -10,11 +10,11 @@
 </div>
 <mat-card *ngFor="let content of contentList" class="home-card">
   <mat-card-title>{{content.title}}</mat-card-title>
-  <img mat-card-image src="{{uploadServerURL}}/{{content.imageURL}}">
+  <img mat-card-image src="{{uploadServerURL}}{{content.images[0]}}">
   <mat-card-content>
       {{content.description}}
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button (click)="moreBtnClick('page/'+content.id);">More</button>
+    <button mat-button (click)="moreBtnClick('page/'+content._id);">More</button>
   </mat-card-actions>
 </mat-card>

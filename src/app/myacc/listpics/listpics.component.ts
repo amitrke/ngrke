@@ -4,7 +4,9 @@ import { UserService } from '../../services/user.service';
 import { environment } from '../../../environments/environment';
 import { PhotogalleryService } from '../../services/photogallery.service';
 import { PhotogalleryEntity } from '../../entity/photogallery.entity';
-import { MatSlideToggleChange, MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CnfdlgComponent } from '../../cnfdlg/cnfdlg.component';
 import { UserEntity } from '../../entity/user.entity';
 
@@ -15,12 +17,13 @@ import { UserEntity } from '../../entity/user.entity';
 })
 export class ListpicsComponent implements OnInit, OnChanges {
 
-  public imageList: string[];
-  public uploadServerURL: string;
+  public imageList: {Key: string, ETag: string}[];
+  public staticContentURL: string;
   public galleryList: PhotogalleryEntity[];
 
   animal: string;
   name: string;
+  user: UserEntity;
 
   @Input() selectedTabIndex: number;
   @Output() navToTabIndex = new EventEmitter<number>();
@@ -34,7 +37,14 @@ export class ListpicsComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.uploadServerURL = environment.uploadServerURL;
+    this.staticContentURL = environment.staticContentURL;
+
+    if (this.userService.cachedUser) {
+      this.user = this.userService.cachedUser;
+    }
+    this.userService.cachedUserChange.subscribe(value => {
+      this.user = value;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -47,30 +57,21 @@ export class ListpicsComponent implements OnInit, OnChanges {
     }
   }
 
-  updateFilesList() {
-    const user: UserEntity = this.userService.getCachedUser('user');
-    if (user != null) {
-      const folder = this.fileUploadService.uploadBaseFolder + user.id;
-      this.fileUploadService.listFiles(folder).subscribe(data => {
-        this.imageList = data;
-        this.fileUploadService.imageListCache = data;
-      }, error => {
-        console.log(error);
-      });
-
+  private updateFilesList = async() => {
+    if (this.user != null) {
+      this.imageList = this.userService.cachedUser.files;
       this.updatePhotogalleryList();
     }
   }
 
   updatePhotogalleryList() {
     const searchCriteria = new PhotogalleryEntity(undefined);
-    const user: UserEntity = this.userService.getCachedUser('user');
-      searchCriteria.userId = user.id;
-      this.photogalleryService.search(searchCriteria).subscribe(data => {
-        this.galleryList = data;
-      }, error => {
-        console.log(error);
-      });
+    searchCriteria.userId = this.user.id;
+    // this.photogalleryService.search(searchCriteria).subscribe(data => {
+    //   this.galleryList = data;
+    // }, error => {
+    //   console.log(error);
+    // });
   }
 
   isGlry(imageURL: string) {
@@ -87,8 +88,7 @@ export class ListpicsComponent implements OnInit, OnChanges {
     console.log('Gallery change ' + event.checked + ', Source=' + event.source.id);
     if (event.checked) { // Add to gallery
       const glry = new PhotogalleryEntity(event.source.id);
-      const user: UserEntity = this.userService.getCachedUser('user');
-      glry.userId = user.id;
+      glry.userId = this.user.id;
       this.photogalleryService.save(glry).subscribe(data => {
         this.updatePhotogalleryList();
         this.snackBar.open('Added to photogallery', undefined, {
@@ -122,9 +122,8 @@ export class ListpicsComponent implements OnInit, OnChanges {
     });
   }
 
-  onDelete(fileName: string) {
-    const user: UserEntity = this.userService.getCachedUser('user');
-    this.name = user.name;
+  async onDelete(fileName: any) {
+    this.name = this.user.name;
     this.animal = 'you want to delete this file';
 
     const dialogRef = this.dialog.open(CnfdlgComponent, {
@@ -132,15 +131,16 @@ export class ListpicsComponent implements OnInit, OnChanges {
       data: {name: this.name, animal: this.animal}
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       console.log('The dialog was closed' + result);
       this.animal = result;
       if (result === 'yes') {
-        this.fileUploadService.delete(fileName).subscribe(data => {
+        try {
+          const resp = await this.fileUploadService.deleteFiles(fileName.Key);
           this.updateFilesList();
-        }, error => {
-          console.log(error);
-        });
+        } catch (err) {
+          console.error(err);
+        }
       }
     });
   }

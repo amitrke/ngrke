@@ -20,8 +20,9 @@ export class ListpostsComponent implements OnInit, OnChanges  {
   @Input() selectedTabIndex: number;
   @Output() navToTabIndex = new EventEmitter<number>();
 
-  contentList: UserService[] = [];
+  contentList: ContentEntity[] = [];
   public uploadServerURL: string;
+  user: UserEntity;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedTabIndex'] && this.selectedTabIndex && this.selectedTabIndex === 3) {
@@ -30,11 +31,16 @@ export class ListpostsComponent implements OnInit, OnChanges  {
     }
   }
 
-  ngOnInit() {
-    this.uploadServerURL = environment.uploadServerURL;
-    if (this.userService.getCachedUser('idtoken') != null) {
-      this.fetchData();
+  async ngOnInit() {
+    this.uploadServerURL = environment.staticContentURL;
+    if (this.userService.cachedUser) {
+      this.user = this.userService.cachedUser;
+      await this.fetchData();
     }
+    this.userService.cachedUserChange.subscribe(async (value) => {
+      this.user = value;
+      await this.fetchData();
+    });
   }
 
   onEditLink(editObject: ContentEntity) {
@@ -42,14 +48,7 @@ export class ListpostsComponent implements OnInit, OnChanges  {
     this.navToTabIndex.emit(2);
   }
 
-  fetchData() {
-    const content = new ContentEntity(undefined, undefined, undefined, undefined, undefined);
-    const user: UserEntity = this.userService.getCachedUser('user');
-    content.userId = user.id;
-    this.contentService.search(content).subscribe(data => {
-      this.contentList = data;
-    }, error => {
-      console.log(error);
-    });
+  fetchData = async() => {
+    this.contentList = this.userService.cachedUser.posts;
   }
 }

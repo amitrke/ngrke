@@ -7,8 +7,11 @@ export const environment = {
   production: false,
   serviceURL: 'http://localhost:8080/api/',
   uploadServerURL: 'http://localhost:8080',
-  awsServiceURL: 'https://api.aws.roorkee.org/dev/db',
-  staticContentURL: 'https://www-static.roorkee.org/dev',
+  awsServiceURL: 'https://api.aws.roorkee.org/dev/v1',
+  awsFileServiceURL: 'https://api.aws.roorkee.org/dev/file',
+  staticContentURL: 'https://www-static.aws.roorkee.org/dev',
+  graphqlServerURL: 'http://localhost:3000/graphql',
   website: 'rke-dev',
-  build: '123'
+  build: '123',
+  env: 'dev'
 };

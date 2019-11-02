@@ -1,5 +1,11 @@
 export class BaseEntity {
-    public id: number;
-    public userId: number;
+    /*
+    * deprecated.
+    */
+    public id: string;
+
+    public _id: string;
+    public userId: string;
     public status: string;
+    public webid: string;
 }

@@ -3,8 +3,9 @@ import { FormGroup, NgForm } from '@angular/forms';
 import { FileuploadService } from '../services/fileupload.service';
 import { UserService } from '../services/user.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserEntity } from '../entity/user.entity';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-subpic',
@@ -23,8 +24,15 @@ export class SubpicComponent implements OnInit {
   fileToUpload: File = null;
   firstFormGroup: FormGroup;
   fileUploaded = false;
+  user: UserEntity;
 
   ngOnInit() {
+    if (this.userService.cachedUser) {
+      this.user = this.userService.cachedUser;
+    }
+    this.userService.cachedUserChange.subscribe(value => {
+      this.user = value;
+    });
   }
 
   handleFileInput(files: FileList) {
@@ -32,41 +40,44 @@ export class SubpicComponent implements OnInit {
   }
 
   updateFilesList() {
-    if (this.userService.getCachedUser('idtoken') != null) {
-      const user: UserEntity = this.userService.getCachedUser('user');
-      const folder = this.fileUploadService.uploadBaseFolder + user.id;
-      this.fileUploadService.listFiles(folder).subscribe(data => {
-        this.fileUploadService.imageListCache = data;
-      }, error => {
-        console.log(error);
+    // if (this.user != null) {
+    //   this.fileUploadService.listFiles(this.user._id).subscribe(data => {
+    //     this.fileUploadService.imageListCache = data;
+    //   }, error => {
+    //     console.log(error);
+    //   });
+    // }
+  }
+
+  async onSubmit(form: NgForm) {
+    const fileName = `${environment.env}/up/usr/${this.user._id}/${this.fileToUpload.name}`;
+    const base64Image = await this.toBase64(this.fileToUpload);
+
+    try {
+      const response = await this.fileUploadService.postFile(base64Image, fileName, this.fileToUpload);
+      if (response && response.data) {
+        this.snackBar.open('Image uploaded', undefined, {
+          duration: 3000,
+        });
+        this.navToTabIndex.emit(1);
+      } else {
+        this.snackBar.open(`Image upload failed:${response.errors[0].message}`, undefined, {
+          duration: 6000,
+        });
+        console.error(response);
+      }
+    } catch (err) {
+      this.snackBar.open('Image upload failed', undefined, {
+        duration: 6000,
       });
+      console.error(err);
     }
   }
 
-  onSubmit(form: NgForm) {
-    const user: UserEntity = this.userService.getCachedUser('user');
-    const fileName = this.fileUploadService.uploadBaseFolder + user.id + '/' + this.fileToUpload.name;
-    this.fileUploadService.postFile(this.fileToUpload, fileName).subscribe(
-      event => {
-        if (event.type === HttpEventType.UploadProgress) {
-          const percentDone = Math.round(100 * event.loaded / event.total);
-          console.log(`File is ${percentDone}% loaded.`);
-        } else if (event instanceof HttpResponse) {
-          console.log('File is completely loaded!');
-          this.updateFilesList();
-        }
-      },
-      (err) => {
-        console.log('Upload Error:', err);
-        this.snackBar.open(err.error.message, undefined, {
-          duration: 2000,
-        });
-      }, () => {
-        this.snackBar.open('Image uploaded', undefined, {
-          duration: 2000,
-        });
-        this.navToTabIndex.emit(1);
-      }
-    );
-  }
+  toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  })
 }

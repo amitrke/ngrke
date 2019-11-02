@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserEntity } from '../entity/user.entity';
 import { BaseService } from './base.service';
 import { environment } from '../../environments/environment';
-import { AwsClient } from 'aws4fetch';
 import { AWSCredentials } from '../entity/awscredentials.entity';
-import { BaseEntity } from '../entity/base.entity';
+import { query } from 'gql-query-builder';
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
@@ -17,46 +16,43 @@ export class UserService extends BaseService<UserEntity> {
                       '&WebIdentityToken=#TOKEN#&Version=2011-06-15';
 
   constructor(private httpClient: HttpClient) {
-    super(httpClient, 'users');
+    super(httpClient, 'User');
   }
 
-  private awsClient: AwsClient;
-  private awsCredentials: AWSCredentials;
+  cachedUserChange: Subject<UserEntity> = new Subject<UserEntity>();
 
-  public setCachedUser(idtoken: string, user: UserEntity) {
-    localStorage.setItem('idtoken', idtoken);
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('expiry', JSON.stringify(new Date().getTime()));
-    this.cachedUser = user;
-  }
-
-  public setAWSCachedUser(accessKeyId: string, secretAccessKey: string, sessionToken: string, user: UserEntity) {
+  /**
+   * @deprecated
+   */
+  public setAWSAPIKeys = async(accessKeyId: string, secretAccessKey: string, sessionToken: string) => {
+    console.warn('Calling deprecated function!');
     this.awsCredentials = new AWSCredentials(accessKeyId, secretAccessKey, sessionToken);
     localStorage.setItem('AccessKeyId', accessKeyId);
     localStorage.setItem('SecretAccessKey', secretAccessKey);
     localStorage.setItem('SessionToken', sessionToken);
-    localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('expiry', JSON.stringify(new Date().getTime()));
-    if (this.cachedUser === undefined) {
-      this.cachedUser = user;
-    }
   }
 
-  public getAWSCachedUser(): AWSCredentials {
-    if (this.awsCredentials === undefined && localStorage.getItem('AccessKeyId')) {
-      console.log('Reading aws credentials from local storage');
-      this.awsCredentials.AccessKeyId = localStorage.getItem('AccessKeyId');
-      this.awsCredentials.SecretAccessKey = localStorage.getItem('SecretAccessKey');
-      this.awsCredentials.SessionToken = localStorage.getItem('SessionToken');
-    }
-    return this.awsCredentials;
+  public setApiToken = async(token: string) => {
+    localStorage.setItem('ApiToken', token);
+  }
+
+  public setCachedUser = (user: UserEntity) => {
+    this.cachedUser = user;
+    localStorage.setItem('user', JSON.stringify(user));
+    console.log('userService: cachedUser updated');
+    this.cachedUserChange.next(user);
   }
 
   public removeCachedUser() {
     localStorage.clear();
   }
 
+  /**
+   * @deprecated
+   */
   public getAWSAuthKeys(idtoken: string): Observable<any> {
+    console.warn('Calling deprecated function!');
     const awsAuth = this.awsAuthURL.replace('#TOKEN#', idtoken);
     return this.httpClient.get(awsAuth)
     .pipe(
@@ -64,27 +60,33 @@ export class UserService extends BaseService<UserEntity> {
     );
   }
 
-  private getAWSClient(): AwsClient {
-    if (this.awsClient === undefined) {
-      const awsCred = this.getAWSCachedUser();
-      this.awsClient = new AwsClient(
-        {
-          accessKeyId: awsCred.AccessKeyId,
-          secretAccessKey: awsCred.SecretAccessKey,
-          sessionToken: awsCred.SessionToken,
-          region: 'us-east-1',
-          'service': 'execute-api'
-        });
-      return this.awsClient;
-    } else {
-      return this.awsClient;
-    }
+  public getAuthToken = (idtoken: string): Observable<any> => {
+    const headers = new HttpHeaders({'Authorization':idtoken});
+    return this.httpClient.post(`${environment.graphqlServerURL}/../login`, "", {headers: headers})
+    .pipe(
+      catchError(this.handleError)
+    );
   }
 
-  async getAWSUser(user: UserEntity) {
+  public setAWSAuthKeys = async(idtoken: string) => {
+    const keys = await this.getAWSAuthKeys(idtoken).toPromise();
+
+  }
+
+  getAWSUser = async(user: UserEntity) => {
     const res = await this.getAWSClient().fetch(
-          `${environment.awsServiceURL}?TableName=subnextsrv1-dev_user&filter=email&value=${user.email}`, 
-           {});
+          `${environment.awsServiceURL}/User/q/{"social.email":"${user.getEmail()}","webid":"${environment.website}"}`,
+           {}
+          );
+    return res.json();
+  }
+
+  createAWSUser = async(user: UserEntity) => {
+    const res = await this.getAWSClient().fetch(
+          `${environment.awsServiceURL}/User`, {
+            method: 'PUT',
+            body: JSON.stringify(user)
+          });
     return res.json();
   }
 
@@ -96,5 +98,25 @@ export class UserService extends BaseService<UserEntity> {
             .pipe(
               catchError(this.handleError)
             );
+  }
+
+  public search = async (entity: UserEntity): Promise<any> => {
+    const gqlQuery = query({
+      operation: 'getUser',
+      variables: {
+        email: {value: entity.getEmail(), required: true},
+        webid: {value: environment.website, required: true}
+      },
+      fields: ['id', 'name', {'social': ['email', 'type', 'profilePic']}]
+    });
+    return this.doGqlPost(gqlQuery);
+  }
+
+  public getCurrUser = async (): Promise<any> => {
+    const gqlQuery = query({
+      operation: 'user',
+      fields: ['id', {'social': ['email', 'type']}, {'files': ['Key', 'ETag']}, {'posts': ['id', 'title', 'images', 'description']}]
+    });
+    return this.doGqlPost(gqlQuery);
   }
 }
