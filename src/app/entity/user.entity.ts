@@ -22,9 +22,11 @@ export class UserEntity extends BaseEntity {
         public webid: string,
         public name: string,
         public created: Date,
-        public lastLogin: Date
+        public lastLogin: Date,
+        id?: string
     ) {
         super();
+        this.id = id;
     }
 
     public static instanceFromGoogle = (googleUser: gapi.auth2.GoogleUser) => {

@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
 
     await this.setLoggedInUser(new UserEntity(
       'Unknown', socials, environment.website, googleUser.getBasicProfile().getName(),
-      new Date(), new Date()
+      new Date(), new Date(), authToken.userid
     ));
   }
 
@@ -78,7 +78,6 @@ export class LoginComponent implements OnInit {
     const currUser: UserEntity = currUserGqlResp.data.user;
     user.files = currUser.files;
     user.posts = currUser.posts;
-    console.log(currUser);
     this.userService.setCachedUser(user);
   }
 }
