@@ -43,11 +43,11 @@ export class EditpostComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     if (this.userService.cachedUser) {
-      this.model.userId = this.userService.cachedUser._id;
+      this.model.userId = this.userService.cachedUser.id;
       this.imageList = this.fileUploadService.imageListCache;
     } else {
       this.userService.cachedUserChange.subscribe(value => {
-        this.model.userId = value._id;
+        this.model.userId = value.id;
         this.imageList = this.fileUploadService.imageListCache;
       });
     }
