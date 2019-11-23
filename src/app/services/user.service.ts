@@ -40,6 +40,25 @@ export class UserService extends BaseService<UserEntity> {
 
   public setCachedUser = (user: UserEntity) => {
     this.cachedUser = user;
+    if (localStorage.getItem('user')) {
+      const usrObj: UserEntity = JSON.parse(localStorage.getItem('user'));
+      if (usrObj.id === user.id) {
+        let updateHappened = false;
+        if (user.files) {
+          usrObj.files = user.files;
+          updateHappened = true;
+        }
+        if (user.posts) {
+          usrObj.posts = user.posts;
+          updateHappened = true;
+        }
+        if (updateHappened) {
+          localStorage.setItem('user', JSON.stringify(usrObj));
+          console.log('userService: cachedUser details updated');
+        }
+        return;
+      }
+    }
     localStorage.setItem('user', JSON.stringify(user));
     console.log('userService: cachedUser updated');
     this.cachedUserChange.next(user);

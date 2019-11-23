@@ -68,21 +68,21 @@ export class LoginComponent implements OnInit {
     const socials = [];
     socials.push(social);
 
-    await this.setLoggedInUser(new UserEntity(
+    const usr = new UserEntity(
       'Unknown', socials, environment.website, googleUser.getBasicProfile().getName(),
       new Date(), new Date(), authToken.userid
-    ));
+    );
+    const currUserGqlResp = await this.userService.getCurrUser();
+    const dbUser: UserEntity = currUserGqlResp.data.user;
+    this.setLoggedInUser(usr, dbUser);
   }
 
-  private setLoggedInUser = async (user: UserEntity) => {
-    this.loggedInUser = user;
-    this.loggedIn = true;
-    this.loginEvent.emit(user);
-    this.changeDetectorRef.detectChanges();
-    const currUserGqlResp = await this.userService.getCurrUser();
-    const currUser: UserEntity = currUserGqlResp.data.user;
-    user.files = currUser.files;
-    user.posts = currUser.posts;
+  private setLoggedInUser =  (user: UserEntity, dbUser: UserEntity) => {
     this.userService.setCachedUser(user);
+    this.userService.setCachedUser(dbUser);
+    this.loggedInUser = this.userService.cachedUser;
+    this.loggedIn = true;
+    this.loginEvent.emit(this.loggedInUser);
+    this.changeDetectorRef.detectChanges();
   }
 }
