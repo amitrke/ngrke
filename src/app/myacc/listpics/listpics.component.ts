@@ -137,7 +137,15 @@ export class ListpicsComponent implements OnInit, OnChanges {
       if (result === 'yes') {
         try {
           const resp = await this.fileUploadService.deleteFiles(fileName.Key);
-          this.updateFilesList();
+          if (resp.errors && resp.errors.length > 0) {
+            this.snackBar.open(resp.errors[0].message, undefined, {
+              duration: 2000,
+            });
+          } else {
+            const user = await this.userService.getCurrUser();
+            this.userService.setCachedUser(user.data.user);
+            this.updateFilesList();
+          }
         } catch (err) {
           console.error(err);
         }

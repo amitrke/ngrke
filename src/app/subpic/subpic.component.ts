@@ -59,6 +59,8 @@ export class SubpicComponent implements OnInit {
         this.snackBar.open('Image uploaded', undefined, {
           duration: 3000,
         });
+        const user = await this.userService.getCurrUser();
+        this.userService.setCachedUser(user.data.user);
         this.navToTabIndex.emit(1);
       } else {
         this.snackBar.open(`Image upload failed:${response.errors[0].message}`, undefined, {
