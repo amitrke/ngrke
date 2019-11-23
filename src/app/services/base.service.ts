@@ -165,10 +165,10 @@ export class BaseService<T extends BaseEntity> {
     }
 
   public getCachedUser(attribute: string): any {
-    if (localStorage.length > 0 && localStorage.getItem('expiry') != null) {
-      const expiry: number = Number.parseInt(localStorage.getItem('expiry'));
+    if (localStorage.length > 0 && localStorage.getItem('tokenUpdateTime') && localStorage.getItem('ApiToken') && localStorage.getItem('user') ) {
+      const tokenUpdateTime: number = Number.parseInt(localStorage.getItem('tokenUpdateTime'), 10);
       const now = new Date().getTime();
-      if ((now - expiry) < 3600000 && localStorage.getItem(attribute) != null) {
+      if ((now - tokenUpdateTime) < 3600000 && localStorage.getItem(attribute) != null) {
         try {
           const obj = JSON.parse(localStorage.getItem(attribute));
           if (attribute === 'user') {
@@ -180,6 +180,6 @@ export class BaseService<T extends BaseEntity> {
         }
       }
     }
-    return null;
+    return undefined;
   }
 }

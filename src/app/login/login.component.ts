@@ -37,6 +37,11 @@ export class LoginComponent implements OnInit {
     this.userService.cachedUserChange.subscribe(value => {
       this.setUser(value);
     });
+    const user = this.userService.getCachedUser('user');
+    if (user) {
+      this.loggedIn = true;
+      this.loggedInUser = user;
+    }
   }
 
   setUser = (user: UserEntity) => {

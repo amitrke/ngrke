@@ -1,3 +1,6 @@
+/**
+ * @deprecated
+ */
 export class AWSCredentials {
     constructor (
         public AccessKeyId: string,

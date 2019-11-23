@@ -35,6 +35,7 @@ export class UserService extends BaseService<UserEntity> {
 
   public setApiToken = async(token: string) => {
     localStorage.setItem('ApiToken', token);
+    localStorage.setItem('tokenUpdateTime', (new Date()).getTime().toString());
   }
 
   public setCachedUser = (user: UserEntity) => {
@@ -68,12 +69,20 @@ export class UserService extends BaseService<UserEntity> {
     );
   }
 
+  /**
+   * @deprecated
+   */
   public setAWSAuthKeys = async(idtoken: string) => {
+    console.warn('Calling deprecated function!');
     const keys = await this.getAWSAuthKeys(idtoken).toPromise();
 
   }
 
+  /**
+   * @deprecated
+   */
   getAWSUser = async(user: UserEntity) => {
+    console.warn('Calling deprecated function!');
     const res = await this.getAWSClient().fetch(
           `${environment.awsServiceURL}/User/q/{"social.email":"${user.getEmail()}","webid":"${environment.website}"}`,
            {}
@@ -81,7 +90,11 @@ export class UserService extends BaseService<UserEntity> {
     return res.json();
   }
 
+  /**
+   * @deprecated
+   */
   createAWSUser = async(user: UserEntity) => {
+    console.warn('Calling deprecated function!');
     const res = await this.getAWSClient().fetch(
           `${environment.awsServiceURL}/User`, {
             method: 'PUT',
