@@ -23,5 +23,10 @@
     ],
     "module": "esnext",
     "baseUrl": "./"
-  }
+  },
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts",
+    "**/*.e2e-spec.ts"
+  ]
 }
